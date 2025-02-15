@@ -6,10 +6,12 @@ require('dotenv').config()
 const { buttonsConfig, texts } = require('../data/keyboard')
 const { users } = require('../users/users.model')
 const { selectedByUser } = require('../globalBuffer')
+const { userSettings } = require('../controllers/userSettings')
 
 module.exports.commonStartMenu = async function (bot, msg) {
   console.log(`/start at ${new Date()} tg_user_id: ${msg.chat.id}`)
   const adminUser = users.find(user => user.id === msg.chat.id)
+  if (selectedByUser[msg.chat.id] === undefined) await userSettings(msg)
   if (adminUser) {
     await menuStarter(bot, msg, buttonsConfig["starterButtons"])
   } else {

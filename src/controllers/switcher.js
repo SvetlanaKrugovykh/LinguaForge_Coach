@@ -5,10 +5,6 @@ const { globalBuffer, selectedByUser } = require('../globalBuffer')
 const fs = require('fs')
 const path = require('path')
 require('dotenv').config()
-const validDataValues = [
-  'ru_en', 'ru_de', 'ru_es', 'ru_fr',
-  'en_ru', 'de_ru', 'es_ru', 'pl_ru', 'fr_ru'
-]
 
 function getCallbackData(text) {
   try {
@@ -51,13 +47,6 @@ async function handler(bot, msg) {
 
   if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
   let lang = selectedByUser[chatId]?.nativeLanguage || 'en'
-
-  if (validDataValues.includes(data)) {
-    if (selectedByUser[chatId]?.changed) return
-    pinTranslateDirection(dataExt, msg)
-    await menu.settingsMenu(bot, msg, lang)
-    return
-  }
 
   console.log('The choice is:', data)
   switch (data) {
