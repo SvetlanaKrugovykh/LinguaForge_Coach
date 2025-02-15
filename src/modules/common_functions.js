@@ -3,7 +3,7 @@ const { globalBuffer, selectedByUser } = require('../globalBuffer')
 
 module.exports.textInput = async function (bot, msg) {
   try {
-    let inputLength = 15
+    let inputLength = 3
     const txtCommand = await inputLineScene(bot, msg)
 
     if (!txtCommand || txtCommand.length < inputLength) {

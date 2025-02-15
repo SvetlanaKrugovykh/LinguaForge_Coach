@@ -4,6 +4,7 @@ const { textInput } = require('../modules/common_functions')
 const { globalBuffer, selectedByUser } = require('../globalBuffer')
 const fs = require('fs')
 const path = require('path')
+const langS = require('../services/langServerServices')
 require('dotenv').config()
 
 function getCallbackData(text) {
@@ -42,17 +43,16 @@ async function handler(bot, msg) {
   const data = getCallbackData(msg.text)
   if (!data) return
 
-  const dataExt = data
   if (!selectedByUser[chatId]) selectedByUser[chatId] = getFromUserFile(chatId)
 
   if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
-  let lang = selectedByUser[chatId]?.nativeLanguage || 'en'
+  let lang = selectedByUser[chatId]?.nativeLanguage || 'pl'
 
   console.log('The choice is:', data)
   switch (data) {
     case '0_1':
       await textInput(bot, msg, data)
-      await menu.commonStartMenu(bot, msg, true)
+      await menu.commonChoice(bot, msg, '0_1')
       break
     case '0_2':
       await menu.notTextScene(bot, msg)
@@ -60,10 +60,21 @@ async function handler(bot, msg) {
     case '0_3':
       await menu.settingsMenu(bot, msg, lang)
       break
+    case '0_6':
+      if (!selectedByUser[chatId].text || selectedByUser[chatId].text === '') {
+        await menu.commonStartMenu(bot, msg, true)
+        return
+      } else {
+        await langS.getVoiceFromTxt(selectedByUser[chatId].text, 'pl', msg, bot)
+      }
+      break
     case '0_5':
+      await textInput(bot, msg, data)
       await menu.translation(bot, msg, data)
       break
     case '0_7':
+      await menu.commonTestsMenu(bot, msg, true)
+      break
     case '0_9':
       if (selectedByUser[chatId]?.changed) return
       pinNativeLanguage(data, msg)
@@ -79,22 +90,6 @@ async function handler(bot, msg) {
       break
     default:
       await menu.commonStartMenu(bot, msg, true)
-  }
-}
-
-
-function pinTranslateDirection(dataExt, msg) {
-  const chatId = msg?.chat?.id
-  const lang = dataExt.split('_')[0]
-  const direction = dataExt.split('_')[1]
-
-  if (chatId && lang && direction) {
-    if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
-    selectedByUser[chatId].language = lang
-    selectedByUser[chatId].direction = direction
-    selectedByUser[chatId].changed = true
-    console.log(selectedByUser[chatId])
-    pinToUserFile(chatId)
   }
 }
 

@@ -7,6 +7,7 @@ const { buttonsConfig, texts } = require('../data/keyboard')
 const { users } = require('../users/users.model')
 const { selectedByUser } = require('../globalBuffer')
 const { userSettings } = require('../controllers/userSettings')
+const langS = require('../services/langServerServices')
 
 module.exports.commonStartMenu = async function (bot, msg) {
   console.log(`/start at ${new Date()} tg_user_id: ${msg.chat.id}`)
@@ -19,13 +20,36 @@ module.exports.commonStartMenu = async function (bot, msg) {
   }
 }
 
-module.exports.settingsMenu = async function (bot, msg, lang = "en") {
+module.exports.settingsMenu = async function (bot, msg, lang = 'en') {
   await bot.sendMessage(msg.chat.id, buttonsConfig["settingsButtons"].title[lang], {
     reply_markup: {
       keyboard: buttonsConfig["settingsButtons"].buttons[lang],
       resize_keyboard: true
     }
   })
+}
+
+module.exports.commonTestsMenu = async function (bot, msg) {
+  const lang = selectedByUser[msg.chat.id].language || 'pl'
+  await bot.sendMessage(msg.chat.id, buttonsConfig["examPartsMenu"].title[lang], {
+    reply_markup: {
+      keyboard: buttonsConfig["examPartsMenu"].buttons[lang],
+      resize_keyboard: true
+    }
+  })
+}
+
+module.exports.commonChoice = async function (bot, msg, data) {
+  const chatId = msg?.chat?.id
+  if (!chatId || !msg?.text) return
+  const lang = selectedByUser[chatId].language || 'pl'
+  await bot.sendMessage(msg.chat.id, buttonsConfig["confirmTextInput"].title[lang], {
+    reply_markup: {
+      keyboard: buttonsConfig["confirmTextInput"].buttons[lang],
+      resize_keyboard: true
+    }
+  })
+
 }
 
 module.exports.chooseTranslateDirectionMenu = async function (bot, msg, lang = "en") {
@@ -128,7 +152,11 @@ module.exports.translation = async function (bot, msg, data) {
   const chatId = msg?.chat?.id
   if (!chatId || !msg?.text) return
 
-  //axios call to translation service
+  const text = selectedByUser[chatId].text
+  if (!text || text === '') return
+
+  const lang = selectedByUser[chatId].language || 'pl'
+  await langS.getLangData(text, msg)
 }
 
 async function downloadFile(bot, fileId, dest) {
