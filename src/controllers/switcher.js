@@ -88,6 +88,12 @@ async function handler(bot, msg) {
       selectedByUser[chatId].changed = false
       await menu.chooseNativeLanguageMenu(bot, msg)
       break
+
+    case '2_1':
+    case '2_2':
+    case '2_3':
+      // await menu.commonTestsMenu(bot, msg, true)
+      break
     default:
       await menu.commonStartMenu(bot, msg, true)
   }
