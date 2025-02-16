@@ -1,5 +1,6 @@
 const { testsMenu } = require('../data/tests_keyboard')
 const { selectedByUser } = require('../globalBuffer')
+const testsServices = require('../services/testsServices')
 
 module.exports.OptionsParts1_3 = async function (bot, msg, lang) {
   await bot.sendMessage(msg.chat.id, testsMenu["level1_3"].title[lang], {
@@ -12,4 +13,8 @@ module.exports.OptionsParts1_3 = async function (bot, msg, lang) {
 
 module.exports.do1Test = async function (bot, msg) {
   console.log('do1Test', selectedByUser[msg.chat.id]?.OptionsParts1_3)
+  const chatId = msg?.chat?.id
+  const lang = selectedByUser[chatId]?.language || 'pl'
+  const part1_3 = selectedByUser[msg.chat.id]?.OptionsParts1_3 || '2'
+  await testsServices.get1Test(part1_3, lang, msg, bot)
 }
