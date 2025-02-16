@@ -23,6 +23,10 @@ bot.on('text', async (msg) => {
     await tests.do1Test(bot, msg)
     return
   }
+  if (msg.text.includes('🔶')) {
+    await tests.doAllTests(bot, msg)
+    return
+  }
   if (msg.text.startsWith('platform:')) {
     console.log('Received platform message:', msg.text)
     await menu.commonStartMenu(bot, msg, true)
