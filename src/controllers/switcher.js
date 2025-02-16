@@ -1,5 +1,6 @@
 const { buttonsConfig } = require('../data/keyboard')
 const menu = require('../modules/common_menu')
+const tests = require('../modules/tests_menu')
 const { textInput } = require('../modules/common_functions')
 const { globalBuffer, selectedByUser } = require('../globalBuffer')
 const fs = require('fs')
@@ -47,8 +48,11 @@ async function handler(bot, msg) {
 
   if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
   let lang = selectedByUser[chatId]?.nativeLanguage || 'pl'
+  lang = 'pl'   //TODO: remove this line after testing
 
   console.log('The choice is:', data)
+  const rightmostChar = data.slice(-1)
+
   switch (data) {
     case '0_1':
       await textInput(bot, msg, data)
@@ -84,19 +88,42 @@ async function handler(bot, msg) {
       selectedByUser[chatId].changed = false
       await menu.chooseTranslateDirectionMenu(bot, msg)
       break
-    case '1_2':
+    case '9_1':
+    case '9_2':
+    case '9_3':
+    case '9_4':
       selectedByUser[chatId].changed = false
       await menu.chooseNativeLanguageMenu(bot, msg)
       break
-
     case '2_1':
     case '2_2':
     case '2_3':
-      // await menu.commonTestsMenu(bot, msg, true)
+      selectedByUser[chatId].OptionsParts1_3 = rightmostChar
+      await tests.OptionsParts1_3(bot, msg, lang)
       break
     default:
-      await menu.commonStartMenu(bot, msg, true)
+      switchDynamicSceenes(bot, msg)
   }
+}
+
+async function switchDynamicSceenes(bot, msg) {
+  try {
+    if (/[🏠]/.test(msg.text)) {
+      goBack(bot, msg)
+      return
+    }
+  } catch (error) { console.log(error) }
+}
+
+async function goBack(bot, msg, forcefully = false) {
+  try {
+    if (msg.text.includes('🏠') || forcefully) {
+      await menu.commonStartMenu(bot, msg, true)
+    } else if (msg.text.includes('↩️')) {
+      const lang = selectedByUser[chatId]?.language || 'pl'
+      await menu.usersStarterMenu(bot, msg, lang)
+    }
+  } catch (error) { console.log(error) }
 }
 
 function pinNativeLanguage(menuItem, msg) {

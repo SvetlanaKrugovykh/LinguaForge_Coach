@@ -2,6 +2,7 @@ const { handler } = require('./controllers/switcher')
 const { isThisGroupId } = require('./modules/bot')
 const { bot } = require('./globalBuffer')
 const menu = require('./modules/common_menu')
+const tests = require('./modules/tests_menu')
 const { globalBuffer } = require('./globalBuffer')
 
 bot.on('message', async (msg) => {
@@ -18,6 +19,10 @@ bot.on('message', async (msg) => {
 })
 
 bot.on('text', async (msg) => {
+  if (msg.text.includes('🔸')) {
+    await tests.do1Test(bot, msg)
+    return
+  }
   if (msg.text.startsWith('platform:')) {
     console.log('Received platform message:', msg.text)
     await menu.commonStartMenu(bot, msg, true)
