@@ -43,21 +43,21 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
 module.exports.evaluateTest = async function (msg, bot, lang) {
   try {
     module.exports.compareUserAnswer(msg, bot, lang)
-    await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_6']}`, { parse_mode: 'HTML' })
   } catch (error) {
     console.error(error)
   }
 }
-
 
 module.exports.compareUserAnswer = async function (msg, bot, lang) {
   try {
     const answers = selectedByUser[msg.chat.id].answerSet
     const correctAnswers = selectedByUser[msg.chat.id].currentTest.correct
 
-    const correctMap = correctAnswers.split(' ').reduce((acc, answer) => {
-      const [question, correctOption] = answer.split('. ')
-      acc[question] = correctOption
+    const correctMap = correctAnswers.split(/(?<=\d\.\s[a-z]\))/).reduce((acc, answer) => {
+      const [question, correctOption] = answer.trim().split(/\.\s/)
+      if (correctOption) {
+        acc[question] = correctOption.replace(')', '').trim()
+      }
       return acc
     }, {})
 
@@ -69,9 +69,10 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
     if (discrepancies.length === 0) {
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_5']}`, { parse_mode: 'HTML' })
     } else {
+      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_6']}`, { parse_mode: 'HTML' })
       const discrepancyMessage = discrepancies.map(discrepancy => {
         const [question, userOption] = discrepancy.split(' - ')
-        return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question]}`
+        return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question] || 'undefined'}`
       }).join('\n')
 
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_7']}:\n${discrepancyMessage}`, { parse_mode: 'HTML' })
