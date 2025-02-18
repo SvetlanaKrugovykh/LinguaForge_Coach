@@ -26,7 +26,6 @@ module.exports.doAllTests = async function (bot, msg) {
   const lang = selectedByUser[chatId]?.language || 'pl'
   const part1_3 = selectedByUser[msg.chat.id]?.OptionsParts1_3 || '2'
   const result = await testsServices.getAllTests(part1_3, lang, msg, bot)
-  // await executeResult(result, bot, msg, lang)
 }
 
 async function executeResult(result, bot, msg, lang) {
@@ -39,7 +38,7 @@ async function executeResult(result, bot, msg, lang) {
   const formattedText = result.text.replace(/(\d{2}\.)/g, '\n\n$1')
 
 
-  const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}\n${options}`
+  const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${options}`
   await bot.sendMessage(chatId, question, { parse_mode: 'HTML' })
 
   const numbers = formattedText.match(/\d{2}\./g).map(num => num.trim().replace('.', ''))

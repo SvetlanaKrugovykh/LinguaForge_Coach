@@ -1,4 +1,5 @@
 const { buttonsConfig } = require('../data/keyboard')
+const { testsMenu } = require('../data/tests_keyboard')
 const menu = require('../modules/common_menu')
 const tests = require('../modules/tests_menu')
 const { textInput } = require('../modules/common_functions')
@@ -11,6 +12,17 @@ require('dotenv').config()
 function getCallbackData(text) {
   try {
     for (const buttonSet of Object.values(buttonsConfig)) {
+      for (const langButtons of Object.values(buttonSet.buttons)) {
+        for (const buttonRow of langButtons) {
+          for (const button of buttonRow) {
+            if (button.text === text) {
+              return button.callback_data
+            }
+          }
+        }
+      }
+    }
+    for (const buttonSet of Object.values(testsMenu)) {
       for (const langButtons of Object.values(buttonSet.buttons)) {
         for (const buttonRow of langButtons) {
           for (const button of buttonRow) {

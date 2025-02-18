@@ -25,11 +25,6 @@ bot.on('text', async (msg) => {
   }
   if (msg.text.includes('🔶')) {
     await tests.doAllTests(bot, msg)
-    return
-  }
-  if (msg.text.startsWith('platform:')) {
-    console.log('Received platform message:', msg.text)
-    await menu.commonStartMenu(bot, msg, true)
   }
 })
 
@@ -39,41 +34,10 @@ bot.on('callback_query', async (callbackQuery) => {
     await bot.answerCallbackQuery(callbackQuery.id)
     const action = callbackQuery.data
     const msg = callbackQuery.message
-    const inlineKeyboard = msg.reply_markup.inline_keyboard
-    const text = inlineKeyboard[0][0].text
-    const platforms = text.match(/platform:\s(\w+)/)[1]
-    const senderIdMatch = text.match(/sender_id:\s(\d+)/)
-    const senderId = senderIdMatch ? senderIdMatch[1] : null
-    const platform = platforms ? platforms : 'facebook'
-    if (!senderId) {
-      console.log('sender_id not found:', text)
-      return
-    }
     console.log('Callback query received:', action)
 
-    if (globalBuffer[senderId] === undefined) {
-      globalBuffer[senderId] = {}
-      if (platform !== 'whatsapp') Persistent.sendWelcomeMessage(senderId)
-    } else {
-      if (platform !== 'whatsapp') Persistent.sendMultipleChoice(senderId)
-    }
+    if (globalBuffer[chatId] === undefined) globalBuffer[chatId] = {}
 
-    if (action === 'reply') {
-      await bot.sendMessage(
-        msg.chat.id,
-        `✅ Input reply message for: \nplatform: ${platform}\nsender_id: ${senderId}`
-      )
-      if (globalBuffer[chatId] === undefined) globalBuffer[chatId] = {}
-      globalBuffer[chatId].platform = platform
-      globalBuffer[chatId].senderId = senderId
-    } else if (action === 'decline') {
-      await bot.sendMessage(
-        msg.chat.id,
-        `❌ Decline message for: \nplatform: Facebook\nsender_id: ${senderId}`
-      )
-    } else {
-      console.log('Unknown action:', action)
-    }
   } catch (error) { console.log(error) }
 })
 
