@@ -1,11 +1,14 @@
+const fs = require('fs')
+const path = require('path')
 const { selectedByUser } = require('../globalBuffer')
 
 module.exports.getFromUserFile = function (chatId) {
   try {
-    const filePath = path.join(__dirname, '../../../users/settings', `${chatId}.json`)
+    const SLASH = process.env.SLASH
+    const filePath = path.resolve(process.cwd(), `${SLASH}users${SLASH}settings`, `${chatId}.json`)
     return JSON.parse(fs.readFileSync(filePath))
   } catch (error) {
-    console.log(`./users/settings/${chatId} not found`)
+    console.log(`users/settings/${chatId}.json not found`)
     return {}
   }
 }

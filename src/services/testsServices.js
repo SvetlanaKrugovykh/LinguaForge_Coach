@@ -1,6 +1,8 @@
 const axios = require('axios')
 const fs = require('fs')
 const { t_txt } = require('../data/tests_keyboard')
+const userM = require('./userMemorizeService')
+const { selectedByUser } = require('../globalBuffer')
 
 module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 
@@ -40,9 +42,56 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
 
 module.exports.evaluateTest = async function (msg, bot, lang) {
   try {
-    await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_5']}`, { parse_mode: 'HTML' })
+    module.exports.compareUserAnswer(msg, bot, lang)
     await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_6']}`, { parse_mode: 'HTML' })
   } catch (error) {
     console.error(error)
   }
+}
+
+
+module.exports.compareUserAnswer = async function (msg, bot, lang) {
+  try {
+    const answers = selectedByUser[msg.chat.id].answerSet
+    const correctAnswers = selectedByUser[msg.chat.id].currentTest.correct
+
+    const correctMap = correctAnswers.split(' ').reduce((acc, answer) => {
+      const [question, correctOption] = answer.split('. ')
+      acc[question] = correctOption
+      return acc
+    }, {})
+
+    const discrepancies = answers.filter(answer => {
+      const [question, userOption] = answer.split(' - ')
+      return correctMap[question] !== userOption
+    })
+
+    if (discrepancies.length === 0) {
+      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_5']}`, { parse_mode: 'HTML' })
+    } else {
+      const discrepancyMessage = discrepancies.map(discrepancy => {
+        const [question, userOption] = discrepancy.split(' - ')
+        return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question]}`
+      }).join('\n')
+
+      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_7']}:\n${discrepancyMessage}`, { parse_mode: 'HTML' })
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+module.exports.saveUserAnswerData = async function (msg, bot, lang, choiceText) {
+  if (!selectedByUser[msg.chat.id].answerSet) selectedByUser[msg.chat.id].answerSet = []
+
+  const [questionNumber] = choiceText.split(' - ')
+  const existingIndex = selectedByUser[msg.chat.id].answerSet.findIndex(answer => answer.startsWith(questionNumber))
+
+  if (existingIndex !== -1) {
+    selectedByUser[msg.chat.id].answerSet[existingIndex] = choiceText
+  } else {
+    selectedByUser[msg.chat.id].answerSet.push(choiceText)
+  }
+
+  // userM.setMemorize('part1_3', lang, msg, bot)
 }
