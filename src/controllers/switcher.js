@@ -5,6 +5,8 @@ const tests = require('../modules/tests_menu')
 const { textInput } = require('../modules/common_functions')
 const langS = require('../services/langServerServices')
 const { globalBuffer, selectedByUser } = require('../globalBuffer')
+const { pinNativeLanguage } = require('../services/userSetterService')
+const { getFromUserFile } = require('../services/userGetterServices')
 require('dotenv').config()
 
 function getCallbackData(text) {

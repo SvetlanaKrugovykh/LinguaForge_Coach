@@ -1,20 +1,11 @@
 const { selectedByUser } = require('../globalBuffer')
 const fs = require('fs')
 const path = require('path')
+const { getFromUserFile } = require('../services/userGetterServices')
 
 
 module.exports.isEmptyObject = function (obj) {
   return Object.keys(obj).length === 0 && obj.constructor === Object
-}
-
-module.exports.getFromUserFile = async function (chatId) {
-  try {
-    const filePath = path.join(__dirname, '../../../users/settings', `${chatId}.json`)
-    return JSON.parse(fs.readFileSync(filePath))
-  } catch (error) {
-    console.log(`../../../users/settings/${chatId} not found`)
-    return {}
-  }
 }
 
 module.exports.pinToUserFile = async function (chatId) {
@@ -35,7 +26,7 @@ module.exports.userSettings = async function (msg, operation = 'read', lang = 'p
     const chatId = msg.chat.id
 
     if (!selectedByUser[chatId] || operation === 're_read' || operation === 'authorize' || operation === 'changed') {
-      const data = await module.exports.getFromUserFile(msg.chat.id)
+      const data = await getFromUserFile(msg.chat.id)
       if (module.exports.isEmptyObject(data)) {
         selectedByUser[chatId] = {}
         if (operation === 'authorize') {

@@ -3,7 +3,10 @@ const { isThisGroupId } = require('./modules/bot')
 const { bot } = require('./globalBuffer')
 const menu = require('./modules/common_menu')
 const tests = require('./modules/tests_menu')
+const testS = require('./services/testsServices')
 const { globalBuffer } = require('./globalBuffer')
+const getU = require('./services/userGetterServices')
+
 
 bot.on('message', async (msg) => {
 
@@ -19,16 +22,23 @@ bot.on('message', async (msg) => {
 })
 
 bot.on('text', async (msg) => {
+
+  const lang = getU.getLanguage(msg.chat.id)
+
   if (msg.text.includes('🔸')) {
-    await tests.do1Test(bot, msg)
+    await tests.do1Test(bot, msg, lang)
     return
   }
   if (msg.text.includes('🔶')) {
-    await tests.doAllTests(bot, msg)
+    await tests.doAllTests(bot, msg, lang)
     return
   }
   if (msg.text.includes('➡️')) {
-    await menu.commonTestsMenu(bot, msg, true)
+    await menu.commonTestsMenu(bot, msg, true, lang)
+    return
+  }
+  if (msg.text.includes('❔')) {
+    await testS.evaluateTest(msg, bot, lang)
   }
 })
 

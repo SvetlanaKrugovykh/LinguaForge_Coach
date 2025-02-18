@@ -35,13 +35,3 @@ module.exports.pinToUserFile = function (chatId) {
     console.log('Error pinning to user file:', error)
   }
 }
-
-module.exports.getFromUserFile = function (chatId) {
-  try {
-    const filePath = path.join(__dirname, '../../../users/settings', `${chatId}.json`)
-    return JSON.parse(fs.readFileSync(filePath))
-  } catch (error) {
-    console.log(`./users/settings/${chatId} not found`)
-    return {}
-  }
-}
