@@ -41,11 +41,7 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
 }
 
 module.exports.evaluateTest = async function (msg, bot, lang) {
-  try {
-    module.exports.compareUserAnswer(msg, bot, lang)
-  } catch (error) {
-    console.error(error)
-  }
+  module.exports.compareUserAnswer(msg, bot, lang)
 }
 
 module.exports.compareUserAnswer = async function (msg, bot, lang) {
