@@ -29,8 +29,7 @@ module.exports.settingsMenu = async function (bot, msg, lang = 'en') {
   })
 }
 
-module.exports.commonTestsMenu = async function (bot, msg) {
-  const lang = selectedByUser[msg.chat.id].language || 'pl'
+module.exports.commonTestsMenu = async function (bot, msg, data, lang = 'pl') {
   await bot.sendMessage(msg.chat.id, buttonsConfig["examPartsMenu"].title[lang], {
     reply_markup: {
       keyboard: buttonsConfig["examPartsMenu"].buttons[lang],
@@ -39,10 +38,9 @@ module.exports.commonTestsMenu = async function (bot, msg) {
   })
 }
 
-module.exports.commonChoice = async function (bot, msg, data) {
+module.exports.commonChoice = async function (bot, msg, lang = 'pl') {
   const chatId = msg?.chat?.id
   if (!chatId || !msg?.text) return
-  const lang = selectedByUser[chatId].language || 'pl'
   await bot.sendMessage(msg.chat.id, buttonsConfig["confirmTextInput"].title[lang], {
     reply_markup: {
       keyboard: buttonsConfig["confirmTextInput"].buttons[lang],
@@ -52,14 +50,6 @@ module.exports.commonChoice = async function (bot, msg, data) {
 
 }
 
-module.exports.chooseTranslateDirectionMenu = async function (bot, msg, lang = "en") {
-  await bot.sendMessage(msg.chat.id, buttonsConfig["chooseTranslateDirection"].title[lang], {
-    reply_markup: {
-      keyboard: buttonsConfig["chooseTranslateDirection"].buttons[lang],
-      resize_keyboard: true
-    }
-  })
-}
 
 module.exports.chooseNativeLanguageMenu = async function (bot, msg, lang = "en") {
   await bot.sendMessage(msg.chat.id, buttonsConfig["chooseNativeLanguage"].title[lang], {

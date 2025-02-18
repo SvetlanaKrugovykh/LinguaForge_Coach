@@ -3,10 +3,8 @@ const { testsMenu } = require('../data/tests_keyboard')
 const menu = require('../modules/common_menu')
 const tests = require('../modules/tests_menu')
 const { textInput } = require('../modules/common_functions')
-const { globalBuffer, selectedByUser } = require('../globalBuffer')
-const fs = require('fs')
-const path = require('path')
 const langS = require('../services/langServerServices')
+const { globalBuffer, selectedByUser } = require('../globalBuffer')
 require('dotenv').config()
 
 function getCallbackData(text) {
@@ -59,6 +57,8 @@ async function handler(bot, msg) {
   if (!selectedByUser[chatId]) selectedByUser[chatId] = getFromUserFile(chatId)
 
   if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
+  selectedByUser[chatId].nativeLanguage = 'pl'   //TODO: remove this line after testing
+  selectedByUser[chatId].language = 'pl'   //TODO: remove this line after testing
   let lang = selectedByUser[chatId]?.nativeLanguage || 'pl'
   lang = 'pl'   //TODO: remove this line after testing
 
@@ -68,7 +68,7 @@ async function handler(bot, msg) {
   switch (data) {
     case '0_1':
       await textInput(bot, msg, data)
-      await menu.commonChoice(bot, msg, '0_1')
+      await menu.commonChoice(bot, msg, lang)
       break
     case '0_2':
       await menu.notTextScene(bot, msg)
@@ -114,71 +114,7 @@ async function handler(bot, msg) {
       await tests.OptionsParts1_3(bot, msg, lang)
       break
     default:
-      switchDynamicSceenes(bot, msg)
-  }
-}
-
-async function switchDynamicSceenes(bot, msg) {
-  try {
-    if (/[🏠]/.test(msg.text)) {
-      goBack(bot, msg)
-      return
-    }
-  } catch (error) { console.log(error) }
-}
-
-async function goBack(bot, msg, forcefully = false) {
-  try {
-    if (msg.text.includes('🏠') || forcefully) {
       await menu.commonStartMenu(bot, msg, true)
-    } else if (msg.text.includes('↩️')) {
-      const lang = selectedByUser[chatId]?.language || 'pl'
-      await menu.usersStarterMenu(bot, msg, lang)
-    }
-  } catch (error) { console.log(error) }
-}
-
-function pinNativeLanguage(menuItem, msg) {
-  try {
-    const chatId = msg?.chat?.id
-    let lang = 'en'
-    if (menuItem === '0_9') lang = 'ru'
-    if (menuItem === '0_10') lang = 'pl'
-
-    if (chatId && lang) {
-      if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
-      selectedByUser[chatId].nativeLanguage = lang
-      selectedByUser[chatId].text = ''
-      selectedByUser[chatId].changed = true
-      console.log(selectedByUser[chatId])
-      pinToUserFile(chatId)
-    }
-  } catch (err) {
-    console.log(err)
-    return
-  }
-}
-
-function pinToUserFile(chatId) {
-  try {
-    if (!selectedByUser[chatId]) return
-    const dirPath = path.join(__dirname, '../../../users/settings')
-    const filePath = path.join(dirPath, `${chatId}.json`)
-
-    fs.mkdirSync(dirPath, { recursive: true })
-    fs.writeFileSync(filePath, JSON.stringify(selectedByUser[chatId], null, 2))
-  } catch (error) {
-    console.log('Error pinning to user file:', error)
-  }
-}
-
-function getFromUserFile(chatId) {
-  try {
-    const filePath = path.join(__dirname, '../../../users/settings', `${chatId}.json`)
-    return JSON.parse(fs.readFileSync(filePath))
-  } catch (error) {
-    console.log(`./users/settings/${chatId} not found`)
-    return {}
   }
 }
 

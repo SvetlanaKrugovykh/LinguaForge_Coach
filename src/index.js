@@ -25,6 +25,10 @@ bot.on('text', async (msg) => {
   }
   if (msg.text.includes('🔶')) {
     await tests.doAllTests(bot, msg)
+    return
+  }
+  if (msg.text.includes('➡️')) {
+    await menu.commonTestsMenu(bot, msg, true)
   }
 })
 

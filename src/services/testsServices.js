@@ -1,5 +1,6 @@
 const axios = require('axios')
 const fs = require('fs')
+const { t_txt } = require('../data/tests_keyboard')
 
 module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 
@@ -32,6 +33,15 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
     }
 
     return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+module.exports.evaluateTest = async function (msg, bot, lang) {
+  try {
+    await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_5']}`, { parse_mode: 'HTML' })
+    await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_6']}`, { parse_mode: 'HTML' })
   } catch (error) {
     console.error(error)
   }
