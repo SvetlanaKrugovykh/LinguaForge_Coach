@@ -146,7 +146,7 @@ module.exports.translation = async function (bot, msg, data) {
   if (!text || text === '') return
 
   const lang = selectedByUser[chatId].language || 'pl'
-  await langS.getLangData(text, msg)
+  await langS.getLangData(text, msg, bot, lang)
 }
 
 async function downloadFile(bot, fileId, dest) {
