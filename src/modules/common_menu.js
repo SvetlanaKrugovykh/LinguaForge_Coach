@@ -168,7 +168,7 @@ async function downloadFile(bot, fileId, dest) {
 
 module.exports.downloadPDF = async function (bot, msg, lang = 'pl') {
   try {
-    const filePath = path.join(__dirname, '../../assets/pdf/', `${lang}.pdf`)
+    const filePath = path.join(__dirname, '../../assets/pdf', `${lang}.pdf`)
     await bot.sendDocument(msg.chat.id, filePath, {}, {
       filename: `${lang}.pdf`,
       contentType: 'application/pdf'
