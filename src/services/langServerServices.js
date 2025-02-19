@@ -1,6 +1,7 @@
 const axios = require('axios')
 const fs = require('fs')
 const { bot } = require('../globalBuffer')
+const { t_txt } = require('../data/tests_keyboard')
 require('dotenv').config()
 
 
@@ -48,6 +49,9 @@ module.exports.getLangData = async function (text, msg) {
       }).join('\n')
       await bot.sendMessage(msg.chat.id, data, { parse_mode: "HTML" })
       return response.data
+    } else {
+      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_10']}`, { parse_mode: "HTML" })
+      return null
     }
   } catch (error) {
     console.error(error)
