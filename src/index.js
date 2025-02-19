@@ -59,4 +59,15 @@ bot.on('callback_query', async (callbackQuery) => {
   } catch (error) { console.log(error) }
 })
 
+
+bot.on('polling_error', (error) => {
+  console.error('Polling error:', error.code)
+  if (error.code === 'ECONNRESET') {
+    console.log('Connection reset by peer, restarting polling...')
+    bot.stopPolling()
+      .then(() => bot.startPolling())
+      .catch(err => console.error('Failed to restart polling:', err))
+  }
+})
+
 module.exports = { bot }

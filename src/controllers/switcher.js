@@ -100,7 +100,7 @@ async function handler(bot, msg) {
       break
     case '1_1':
       selectedByUser[chatId].changed = false
-      await menu.chooseTranslateDirectionMenu(bot, msg)
+      await menu.downloadPDF(bot, msg, lang)
       break
     case '9_1':
     case '9_2':

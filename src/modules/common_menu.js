@@ -165,3 +165,16 @@ async function downloadFile(bot, fileId, dest) {
     writer.on('error', reject)
   })
 }
+
+module.exports.downloadPDF = async function (bot, msg, lang = 'pl') {
+  try {
+    const filePath = path.join(__dirname, '../../assets/pdf/', `${lang}.pdf`)
+    await bot.sendDocument(msg.chat.id, filePath, {}, {
+      filename: `${lang}.pdf`,
+      contentType: 'application/pdf'
+    })
+  } catch (err) {
+    console.log(err)
+    await bot.sendMessage(msg.chat.id, texts[lang]['0_1'])
+  }
+}
