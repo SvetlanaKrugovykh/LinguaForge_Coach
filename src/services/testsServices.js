@@ -29,7 +29,7 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
     })
 
     if (part1_3 === '1') {
-      let filename = response.data.filename
+      let filename = response.data.audio
       const fileStream = fs.createReadStream(filename)
       await bot.sendVoice(msg.chat.id, fileStream)
     }

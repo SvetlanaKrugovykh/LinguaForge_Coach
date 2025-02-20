@@ -37,35 +37,40 @@ async function executeResult(result, bot, msg, lang) {
   const chatId = msg.chat.id
 
   if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
-  selectedByUser[chatId].currentTest = result
 
-  const options = result.options.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
-  const formattedText = result.text.replace(/(\d{2}\.)/g, '\n\n$1')
+  try {
+    selectedByUser[chatId].currentTest = result
+
+    const options = result.options.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
+    const formattedText = result.text.replace(/(\d{2}\.)/g, '\n\n$1')
 
 
-  const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${options}`
-  await bot.sendMessage(chatId, question, { parse_mode: 'HTML' })
+    const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${options}`
+    await bot.sendMessage(chatId, question, { parse_mode: 'HTML' })
 
-  const numbers = formattedText.match(/\d{2}\./g).map(num => num.trim().replace('.', ''))
-  const letters = result.options.match(/[a-z]\)/g).map(letter => letter[0])
+    const numbers = formattedText.match(/\d{2}\./g).map(num => num.trim().replace('.', ''))
+    const letters = result.options.match(/[a-z]\)/g).map(letter => letter[0])
 
-  const keyboard = []
-  numbers.forEach(num => {
-    const row = []
-    letters.forEach(letter => {
-      row.push({ text: `${num} - ${letter}` })
+    const keyboard = []
+    numbers.forEach(num => {
+      const row = []
+      letters.forEach(letter => {
+        row.push({ text: `${num} - ${letter}` })
+      })
+      keyboard.push(row)
     })
-    keyboard.push(row)
-  })
 
-  keyboard.push([{ text: `${t_txt[lang]['0_3']}` }])
-  keyboard.push([{ text: `${t_txt[lang]['0_2']}` }])
+    keyboard.push([{ text: `${t_txt[lang]['0_3']}` }])
+    keyboard.push([{ text: `${t_txt[lang]['0_2']}` }])
 
-  await bot.sendMessage(chatId, `${t_txt[lang]['0_4']}`, {
-    reply_markup: {
-      keyboard: keyboard,
-      resize_keyboard: true,
-    }
-  })
+    await bot.sendMessage(chatId, `${t_txt[lang]['0_4']}`, {
+      reply_markup: {
+        keyboard: keyboard,
+        resize_keyboard: true,
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
