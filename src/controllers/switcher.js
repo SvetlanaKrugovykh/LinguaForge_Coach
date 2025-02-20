@@ -115,6 +115,11 @@ async function handler(bot, msg) {
       selectedByUser[chatId].OptionsParts1_3 = rightmostChar
       await tests.OptionsParts1_3(bot, msg, lang)
       break
+    case '2_4':
+    case '2_5':
+      selectedByUser[chatId].OptionsParts1_3 = rightmostChar
+      await tests.OptionsParts4_5(bot, msg, lang)
+      break
     default:
       await menu.commonStartMenu(bot, msg, true)
   }

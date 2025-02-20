@@ -11,6 +11,15 @@ module.exports.OptionsParts1_3 = async function (bot, msg, lang) {
   })
 }
 
+module.exports.OptionsParts4_5 = async function (bot, msg, lang) {
+  await bot.sendMessage(msg.chat.id, testsMenu["level4_5"].title[lang], {
+    reply_markup: {
+      keyboard: testsMenu["level4_5"].buttons[lang],
+      resize_keyboard: true
+    }
+  })
+}
+
 module.exports.do1Test = async function (bot, msg, lang) {
   console.log('do1Test', selectedByUser[msg.chat.id]?.OptionsParts1_3)
   const part1_3 = selectedByUser[msg.chat.id]?.OptionsParts1_3 || '2'
