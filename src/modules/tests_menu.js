@@ -27,12 +27,6 @@ module.exports.do1Test = async function (bot, msg, lang) {
   await executeResult(result, bot, msg, lang)
 }
 
-module.exports.doAllTests = async function (bot, msg, lang) {
-  console.log('do1Test', selectedByUser[msg.chat.id]?.OptionsParts1_3)
-  const part1_3 = selectedByUser[msg.chat.id]?.OptionsParts1_3 || '2'
-  const result = await testsServices.getAllTests(part1_3, lang, msg, bot)
-}
-
 async function executeResult(result, bot, msg, lang) {
   const chatId = msg.chat.id
 
@@ -42,13 +36,13 @@ async function executeResult(result, bot, msg, lang) {
     selectedByUser[chatId].currentTest = result
 
     const options = result.options.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
-    const formattedText = result.text.replace(/(\d{2}\.)/g, '\n\n$1')
-
+    const formattedText = result.text.replace(/(\d{1,3}\.)/g, '\n\n$1')
 
     const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${options}`
     await bot.sendMessage(chatId, question, { parse_mode: 'HTML' })
 
-    const numbers = formattedText.match(/\d{2}\./g).map(num => num.trim().replace('.', ''))
+    const numberMatches = formattedText.match(/\d{1,3}\./g)
+    const numbers = numberMatches ? numberMatches.map(num => num.trim().replace('.', '')) : []
     const letters = result.options.match(/[a-z]\)/g).map(letter => letter[0])
 
     const keyboard = []
@@ -73,4 +67,3 @@ async function executeResult(result, bot, msg, lang) {
     console.error(error)
   }
 }
-

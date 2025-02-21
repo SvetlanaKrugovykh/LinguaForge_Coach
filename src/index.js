@@ -34,7 +34,7 @@ bot.on('text', async (msg) => {
     return
   }
   if (msg.text.includes('🔶')) {
-    await tests.doAllTests(bot, msg, lang)
+    console.log('🔶')   //TODO
     return
   }
   if (msg.text.includes('➡️')) {

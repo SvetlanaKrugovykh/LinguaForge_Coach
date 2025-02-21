@@ -102,10 +102,7 @@ async function handler(bot, msg) {
       selectedByUser[chatId].changed = false
       await menu.downloadPDF(bot, msg, lang)
       break
-    case '9_1':
-    case '9_2':
-    case '9_3':
-    case '9_4':
+    case '1_2':
       selectedByUser[chatId].changed = false
       await menu.chooseNativeLanguageMenu(bot, msg)
       break
