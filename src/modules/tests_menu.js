@@ -27,6 +27,27 @@ module.exports.do1Test = async function (bot, msg, lang) {
   await executeResult(result, bot, msg, lang)
 }
 
+module.exports.getOpus = async function (bot, msg, lang) {
+  console.log('getOpus', selectedByUser[msg.chat.id]?.OptionsParts4_5)
+  const part4_5 = selectedByUser[msg.chat.id]?.OptionsParts4_5 || '4'
+  const result = await testsServices.get1Opus(part4_5, lang, msg, bot)
+  await showOpus(result, bot, msg, lang)
+}
+
+async function showOpus(result, bot, msg, lang) {
+  const chatId = msg.chat.id
+  if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
+  try {
+    selectedByUser[chatId].currentOpus = result
+    const example = result?.example || t_txt[lang]['0_10']
+    await bot.sendMessage(chatId, example, { parse_mode: 'HTML' })
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+
 async function executeResult(result, bot, msg, lang) {
   const chatId = msg.chat.id
 

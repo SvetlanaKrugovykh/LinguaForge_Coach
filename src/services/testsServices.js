@@ -11,6 +11,12 @@ module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 
 }
 
+module.exports.get1Opus = async function (part4_5, lang, msg, bot) {
+
+  const result = module.exports.getOpuses(part4_5, lang, msg, bot, '1')
+  return result
+
+}
 module.exports.getAllTests = async function (part1_3, lang, msg, bot) {
 
   const result = module.exports.getTests(part1_3, lang, msg, bot, 'ALL')
@@ -33,6 +39,22 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
       const fileStream = fs.createReadStream(filename)
       await bot.sendVoice(msg.chat.id, fileStream)
     }
+
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+module.exports.getOpuses = async function (part4_5, lang, msg, bot, total) {
+  try {
+    const response = await axios.post(`${process.env.SERVER_URL}/get-opus`, {
+      query: { "userId": msg.chat.id, "part4_5": part4_5, "lang": lang, "total": total }
+    }, {
+      headers: {
+        Authorization: process.env.LG_SERVER_AUTHORIZATION
+      }
+    })
 
     return response.data
   } catch (error) {

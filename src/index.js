@@ -33,8 +33,16 @@ bot.on('text', async (msg) => {
     await tests.do1Test(bot, msg, lang)
     return
   }
+  if (msg.text.includes('🔹')) {
+    await tests.getOpus(bot, msg, lang)
+    return
+  }
   if (msg.text.includes('🔶')) {
     console.log('🔶')   //TODO
+    return
+  }
+  if (msg.text.includes('🔶')) {
+    console.log('🔷')   //TODO
     return
   }
   if (msg.text.includes('➡️')) {
