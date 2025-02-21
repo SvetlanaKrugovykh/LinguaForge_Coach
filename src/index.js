@@ -29,22 +29,6 @@ bot.on('text', async (msg) => {
     await testS.saveUserAnswerData(msg, bot, lang, msg.text)
     return
   }
-  if (msg.text.includes('🔸')) {
-    await tests.do1Test(bot, msg, lang)
-    return
-  }
-  if (msg.text.includes('🔹')) {
-    await tests.getOpus(bot, msg, lang)
-    return
-  }
-  if (msg.text.includes('🔶')) {
-    console.log('🔶')   //TODO
-    return
-  }
-  if (msg.text.includes('🔶')) {
-    console.log('🔷')   //TODO
-    return
-  }
   if (msg.text.includes('➡️')) {
     await menu.commonTestsMenu(bot, msg, true, lang)
     return

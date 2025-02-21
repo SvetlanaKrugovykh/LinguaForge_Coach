@@ -39,9 +39,19 @@ async function showOpus(result, bot, msg, lang) {
   if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
   try {
     selectedByUser[chatId].currentOpus = result
-    const example = result?.example || t_txt[lang]['0_10']
-    await bot.sendMessage(chatId, example, { parse_mode: 'HTML' })
 
+    const subject = result.example.subject ? `${t_txt[lang]['0_11']} ${result.example.subject}` : ''
+    const exampleText = result.example.example ? `${t_txt[lang]['0_12']}\n${result.example.example}` : ''
+
+    const sortedWords = result.words.sort((a, b) => a.word.localeCompare(b.word))
+
+    const wordsText = sortedWords.map(word => {
+      return `<b>${word.word}</b>\nEN: ${word.en}\nUK: ${word.uk}\nRU: ${word.ru}`
+    }).join('\n\n')
+
+    const message = `${subject}\n\n${exampleText}\n\n${t_txt[lang]['0_13']}\n\n${wordsText}`
+
+    await bot.sendMessage(chatId, message, { parse_mode: 'HTML' })
   } catch (error) {
     console.error(error)
   }

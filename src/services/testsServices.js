@@ -48,8 +48,9 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
 
 module.exports.getOpuses = async function (part4_5, lang, msg, bot, total) {
   try {
+    const size = selectedByUser[msg.chat.id].size || '1'
     const response = await axios.post(`${process.env.SERVER_URL}/get-opus`, {
-      query: { "userId": msg.chat.id, "part4_5": part4_5, "lang": lang, "total": total }
+      query: { "userId": msg.chat.id, "part4_5": part4_5, "lang": lang, "size": size }
     }, {
       headers: {
         Authorization: process.env.LG_SERVER_AUTHORIZATION
