@@ -117,6 +117,12 @@ async function handler(bot, msg) {
       selectedByUser[chatId].OptionsParts1_3 = rightmostChar
       await tests.OptionsParts4_5(bot, msg, lang)
       break
+    case '9_1':
+    case '9_2':
+    case '9_3':
+    case '9_4':
+      await pinNativeLanguage(data, msg)
+      break
     default:
       await menu.commonStartMenu(bot, msg, true)
   }

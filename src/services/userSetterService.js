@@ -5,9 +5,7 @@ const { selectedByUser } = require('../globalBuffer')
 module.exports.pinNativeLanguage = function (menuItem, msg) {
   try {
     const chatId = msg?.chat?.id
-    let lang = 'en'
-    if (menuItem === '0_9') lang = 'ru'
-    if (menuItem === '0_10') lang = 'pl'
+    const lang = module.exports.getLang(menuItem)
 
     if (chatId && lang) {
       if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
@@ -15,7 +13,7 @@ module.exports.pinNativeLanguage = function (menuItem, msg) {
       selectedByUser[chatId].text = ''
       selectedByUser[chatId].changed = true
       console.log(selectedByUser[chatId])
-      pinToUserFile(chatId)
+      module.exports.pinToUserFile(chatId)
     }
   } catch (err) {
     console.log(err)
@@ -34,4 +32,13 @@ module.exports.pinToUserFile = function (chatId) {
   } catch (error) {
     console.log('Error pinning to user file:', error)
   }
+}
+
+
+module.exports.getLang = function (menuItem) {
+  if (menuItem === '9_1') return 'en'
+  if (menuItem === '9_2') return 'ru'
+  if (menuItem === '9_3') return 'uk'
+  if (menuItem === '9_4') return 'pl'
+  return 'en'
 }
