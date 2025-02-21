@@ -54,7 +54,7 @@ async function showOpus(result, bot, msg, lang) {
 
     const message = `${subject}\n\n${exampleText}\n\n${t_txt[lang]['0_13']}\n\n${wordsText}`
 
-    const MAX_MESSAGE_LENGTH = 4096
+    const MAX_MESSAGE_LENGTH = 3999
     if (message.length <= MAX_MESSAGE_LENGTH) {
       await bot.sendMessage(chatId, message, { parse_mode: 'HTML' })
     } else {
