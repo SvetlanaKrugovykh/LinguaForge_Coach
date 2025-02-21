@@ -64,7 +64,9 @@ module.exports.getOpuses = async function (part4_5, lang, msg, bot, total) {
 }
 
 module.exports.evaluateTest = async function (msg, bot, lang) {
-  module.exports.compareUserAnswer(msg, bot, lang)
+  let success = 0
+  success = await module.exports.compareUserAnswer(msg, bot, lang)
+  userM.setMemorize(lang, msg, 'part1_3', success)
 }
 
 module.exports.compareUserAnswer = async function (msg, bot, lang) {
@@ -87,6 +89,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
 
     if (discrepancies.length === 0) {
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_5']}`, { parse_mode: 'HTML' })
+      return 1
     } else {
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_6']}`, { parse_mode: 'HTML' })
       const discrepancyMessage = discrepancies.map(discrepancy => {
@@ -95,6 +98,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
       }).join('\n')
 
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_7']}:\n${discrepancyMessage}`, { parse_mode: 'HTML' })
+      return 0
     }
   } catch (error) {
     console.error(error)
@@ -112,6 +116,4 @@ module.exports.saveUserAnswerData = async function (msg, bot, lang, choiceText) 
   } else {
     selectedByUser[msg.chat.id].answerSet.push(choiceText)
   }
-
-  // userM.setMemorize('part1_3', lang, msg, bot)
 }

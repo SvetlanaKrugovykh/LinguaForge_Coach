@@ -1,6 +1,7 @@
 const { testsMenu, t_txt } = require('../data/tests_keyboard')
 const { selectedByUser } = require('../globalBuffer')
 const testsServices = require('../services/testsServices')
+const { sendTgMsg } = require('../services/commonService')
 
 module.exports.OptionsParts1_3 = async function (bot, msg, lang) {
   await bot.sendMessage(msg.chat.id, testsMenu["level1_3"].title[lang], {
@@ -53,29 +54,8 @@ async function showOpus(result, bot, msg, lang) {
     }).join('\n\n')
 
     const message = `${subject}\n\n${exampleText}\n\n${t_txt[lang]['0_13']}\n\n${wordsText}`
+    await sendTgMsg(bot, chatId, message)
 
-    const MAX_MESSAGE_LENGTH = 3999
-    if (message.length <= MAX_MESSAGE_LENGTH) {
-      await bot.sendMessage(chatId, message, { parse_mode: 'HTML' })
-    } else {
-      const messageParts = []
-      let currentPart = ''
-      message.split('\n\n').forEach(part => {
-        if ((currentPart + '\n\n' + part).length > MAX_MESSAGE_LENGTH) {
-          messageParts.push(currentPart)
-          currentPart = part
-        } else {
-          currentPart += '\n\n' + part
-        }
-      })
-      if (currentPart) {
-        messageParts.push(currentPart)
-      }
-
-      for (const part of messageParts) {
-        await bot.sendMessage(chatId, part, { parse_mode: 'HTML' })
-      }
-    }
   } catch (error) {
     console.error(error)
   }
@@ -94,7 +74,7 @@ async function executeResult(result, bot, msg, lang) {
     const formattedText = result.text.replace(/(\d{1,3}\.)/g, '\n\n$1')
 
     const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${options}`
-    await bot.sendMessage(chatId, question, { parse_mode: 'HTML' })
+    await sendTgMsg(bot, chatId, question)
 
     const numberMatches = formattedText.match(/\d{1,3}\./g)
     const numbers = numberMatches ? numberMatches.map(num => num.trim().replace('.', '')) : []

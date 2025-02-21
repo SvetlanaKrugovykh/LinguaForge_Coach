@@ -59,10 +59,7 @@ async function handler(bot, msg) {
   if (!selectedByUser[chatId]) selectedByUser[chatId] = getFromUserFile(chatId)
 
   if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
-  selectedByUser[chatId].nativeLanguage = 'pl'   //TODO: remove this line after testing
-  selectedByUser[chatId].language = 'pl'   //TODO: remove this line after testing
-  let lang = selectedByUser[chatId]?.nativeLanguage || 'pl'
-  lang = 'pl'   //TODO: remove this line after testing
+  let lang = selectedByUser[chatId]?.language || 'pl'
 
   console.log('The choice is:', data)
   const rightmostChar = data.slice(-1)
