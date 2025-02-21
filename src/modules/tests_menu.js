@@ -39,9 +39,12 @@ async function showOpus(result, bot, msg, lang) {
   if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
   try {
     selectedByUser[chatId].currentOpus = result
-
-    const subject = result.example.subject ? `${t_txt[lang]['0_11']} ${result.example.subject}` : ''
-    const exampleText = result.example.example ? `${t_txt[lang]['0_12']}\n${result.example.example}` : ''
+    if (!result) {
+      await bot.sendMessage(chatId, t_txt[lang]['0_10'], { parse_mode: 'HTML' })
+      return
+    }
+    const subject = result?.example?.subject ? `${t_txt[lang]['0_11']} ${result.example.subject}` : ''
+    const exampleText = result?.example?.example ? `${t_txt[lang]['0_12']}\n${result.example.example}` : ''
 
     const sortedWords = result.words.sort((a, b) => a.word.localeCompare(b.word))
 
@@ -51,7 +54,28 @@ async function showOpus(result, bot, msg, lang) {
 
     const message = `${subject}\n\n${exampleText}\n\n${t_txt[lang]['0_13']}\n\n${wordsText}`
 
-    await bot.sendMessage(chatId, message, { parse_mode: 'HTML' })
+    const MAX_MESSAGE_LENGTH = 4096
+    if (message.length <= MAX_MESSAGE_LENGTH) {
+      await bot.sendMessage(chatId, message, { parse_mode: 'HTML' })
+    } else {
+      const messageParts = []
+      let currentPart = ''
+      message.split('\n\n').forEach(part => {
+        if ((currentPart + '\n\n' + part).length > MAX_MESSAGE_LENGTH) {
+          messageParts.push(currentPart)
+          currentPart = part
+        } else {
+          currentPart += '\n\n' + part
+        }
+      })
+      if (currentPart) {
+        messageParts.push(currentPart)
+      }
+
+      for (const part of messageParts) {
+        await bot.sendMessage(chatId, part, { parse_mode: 'HTML' })
+      }
+    }
   } catch (error) {
     console.error(error)
   }
