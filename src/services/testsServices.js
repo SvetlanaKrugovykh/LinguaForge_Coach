@@ -11,16 +11,35 @@ module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 
 }
 
-module.exports.get1Opus = async function (part4_5, lang, msg, bot) {
-  const result = module.exports.getOpuses(part4_5, lang, msg, bot, '1')
+module.exports.get1Opus = async function (part4_6, lang, msg, bot) {
+  const result = module.exports.getOpuses(part4_6, lang, msg, bot, '1')
   return result
 
 }
 
 
-module.exports.put1Opus = async function (part4_5, lang, msg, bot) {
+module.exports.put1Opus = async function (part4_6, lang, msg, bot) {
+  try {
+    const currentOpus = selectedByUser[msg.chat.id]?.currentOpus
 
+    if (!currentOpus || !Object.entries(currentOpus).length) {
+      return null
+    }
+
+    const response = await axios.post(`${process.env.SERVER_URL}/user-opus-save`, {
+      query: { "userId": msg.chat.id, "part": part4_6, "lang": lang, currentOpus, success: 1 }
+    }, {
+      headers: {
+        Authorization: process.env.LG_SERVER_AUTHORIZATION
+      }
+    })
+
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
 }
+
 
 
 module.exports.getAllTests = async function (part1_3, lang, msg, bot) {
@@ -52,11 +71,11 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
   }
 }
 
-module.exports.getOpuses = async function (part4_5, lang, msg, bot, total) {
+module.exports.getOpuses = async function (part4_6, lang, msg, bot, total) {
   try {
     const size = selectedByUser[msg.chat.id].size || '1'
     const response = await axios.post(`${process.env.SERVER_URL}/get-opus`, {
-      query: { "userId": msg.chat.id, "part4_5": part4_5, "lang": lang, "size": size }
+      query: { "userId": msg.chat.id, "part4_6": part4_6, "lang": lang, "size": size }
     }, {
       headers: {
         Authorization: process.env.LG_SERVER_AUTHORIZATION

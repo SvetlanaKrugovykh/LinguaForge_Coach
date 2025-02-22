@@ -128,6 +128,9 @@ async function handler(bot, msg) {
     case '5_3':
       await tests.putOpus(bot, msg, lang)
       break
+    case '5_5':
+      await langS.SendVoiceOutOpus(bot, msg, lang)
+      break
     case '9_1':
     case '9_2':
     case '9_3':

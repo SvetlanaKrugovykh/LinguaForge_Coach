@@ -1,7 +1,7 @@
 const axios = require('axios')
 const fs = require('fs')
-const { bot } = require('../globalBuffer')
 const { t_txt } = require('../data/tests_keyboard')
+const { selectedByUser } = require('../globalBuffer')
 require('dotenv').config()
 
 
@@ -56,4 +56,18 @@ module.exports.getLangData = async function (text, msg, bot, lang) {
   } catch (error) {
     console.error(error)
   }
+}
+
+module.exports.SendVoiceOutOpus = async function (bot, msg, lang) {
+  const currentOpus = selectedByUser[msg.chat.id]?.currentOpus
+  if (!currentOpus || !Object.entries(currentOpus).length) {
+    return null
+  }
+  const text = currentOpus?.example?.example
+  if (!text || text === '') {
+    await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_10']}`, { parse_mode: "HTML" })
+    return
+  }
+  module.exports.getVoiceFromTxt(text, lang, msg, bot)
+
 }

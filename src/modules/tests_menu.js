@@ -37,8 +37,8 @@ module.exports.getOpus = async function (bot, msg, lang) {
 
 module.exports.putOpus = async function (bot, msg, lang) {
   console.log('getOpus', selectedByUser[msg.chat.id]?.OptionsParts4_6)
-  const part4_5 = selectedByUser[msg.chat.id]?.OptionsParts4_6 || '4'
-  await testsServices.put1Opus(part4_5, lang, msg, bot)
+  const part4_6 = selectedByUser[msg.chat.id]?.OptionsParts4_6 || '4'
+  await testsServices.put1Opus(part4_6, lang, msg, bot)
 }
 
 
