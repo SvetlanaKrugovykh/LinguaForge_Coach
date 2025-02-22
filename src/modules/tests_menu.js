@@ -78,7 +78,8 @@ async function executeResult(result, bot, msg, lang) {
   try {
     selectedByUser[chatId].currentTest = result
 
-    const options = result.options.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
+    const optionsWithPrawdaFalsz = result.options.replace(/prawda\/fałsz/g, 'a) prawda b) fałsz')
+    const options = optionsWithPrawdaFalsz.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
     const formattedText = result.text.replace(/(\d{1,3}\.)/g, '\n\n$1')
 
     const updatedOptions = options.replace(/(\d{1,3}\.)/g, '\n\n$1')
@@ -90,7 +91,9 @@ async function executeResult(result, bot, msg, lang) {
 
     const numberMatches = [...new Set([...(numberMatchesText || []), ...(numberMatchesOptions || [])])]
     const numbers = numberMatches ? numberMatches.map(num => num.trim().replace('.', '')) : []
-    const letters = [...new Set(result.options.match(/[a-z]\)/g).map(letter => letter[0]))]
+
+    const letterMatches = options.match(/[a-z]\)/g)
+    const letters = letterMatches ? [...new Set(letterMatches.map(letter => letter[0]))] : []
 
     const keyboard = []
     numbers.forEach(num => {
