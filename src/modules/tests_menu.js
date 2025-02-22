@@ -84,7 +84,10 @@ async function executeResult(result, bot, msg, lang) {
     const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${options}`
     await sendTgMsg(bot, chatId, question)
 
-    const numberMatches = formattedText.match(/\d{1,3}\./g)
+    const numberMatchesText = formattedText.match(/\d{1,3}\./g)
+    const numberMatchesOptions = options.match(/\d{1,3}\./g)
+
+    const numberMatches = [...new Set([...(numberMatchesText || []), ...(numberMatchesOptions || [])])]
     const numbers = numberMatches ? numberMatches.map(num => num.trim().replace('.', '')) : []
     const letters = result.options.match(/[a-z]\)/g).map(letter => letter[0])
 

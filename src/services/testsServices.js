@@ -17,7 +17,6 @@ module.exports.get1Opus = async function (part4_6, lang, msg, bot) {
 
 }
 
-
 module.exports.put1Opus = async function (part4_6, lang, msg, bot) {
   try {
     const currentOpus = selectedByUser[msg.chat.id]?.currentOpus
@@ -38,15 +37,6 @@ module.exports.put1Opus = async function (part4_6, lang, msg, bot) {
   } catch (error) {
     console.error(error)
   }
-}
-
-
-
-module.exports.getAllTests = async function (part1_3, lang, msg, bot) {
-
-  const result = module.exports.getTests(part1_3, lang, msg, bot, 'ALL')
-  return result
-
 }
 
 module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
