@@ -135,7 +135,7 @@ async function handler(bot, msg) {
     case '9_2':
     case '9_3':
     case '9_4':
-      await pinNativeLanguage(data, msg)
+      pinNativeLanguage(data, msg)
       break
     default:
       await menu.commonStartMenu(bot, msg, true)

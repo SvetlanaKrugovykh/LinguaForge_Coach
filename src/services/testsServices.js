@@ -92,6 +92,8 @@ module.exports.evaluateTest = async function (msg, bot, lang) {
   let success = 0
   success = await module.exports.compareUserAnswer(msg, bot, lang)
   userM.setMemorize(lang, msg, 'part1_3', success)
+  selectedByUser[msg.chat.id].currentTest = null
+  selectedByUser[msg.chat.id].answerSet = null
 }
 
 module.exports.compareUserAnswer = async function (msg, bot, lang) {
