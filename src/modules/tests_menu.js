@@ -12,10 +12,10 @@ module.exports.OptionsParts1_3 = async function (bot, msg, lang) {
   })
 }
 
-module.exports.OptionsParts4_5 = async function (bot, msg, lang) {
-  await bot.sendMessage(msg.chat.id, testsMenu["level4_5"].title[lang], {
+module.exports.OptionsParts4_6 = async function (bot, msg, lang) {
+  await bot.sendMessage(msg.chat.id, testsMenu["level4_6"].title[lang], {
     reply_markup: {
-      keyboard: testsMenu["level4_5"].buttons[lang],
+      keyboard: testsMenu["level4_6"].buttons[lang],
       resize_keyboard: true
     }
   })
@@ -29,11 +29,18 @@ module.exports.do1Test = async function (bot, msg, lang) {
 }
 
 module.exports.getOpus = async function (bot, msg, lang) {
-  console.log('getOpus', selectedByUser[msg.chat.id]?.OptionsParts4_5)
-  const part4_5 = selectedByUser[msg.chat.id]?.OptionsParts4_5 || '4'
+  console.log('getOpus', selectedByUser[msg.chat.id]?.OptionsParts4_6)
+  const part4_5 = selectedByUser[msg.chat.id]?.OptionsParts4_6 || '4'
   const result = await testsServices.get1Opus(part4_5, lang, msg, bot)
   await showOpus(result, bot, msg, lang)
 }
+
+module.exports.putOpus = async function (bot, msg, lang) {
+  console.log('getOpus', selectedByUser[msg.chat.id]?.OptionsParts4_6)
+  const part4_5 = selectedByUser[msg.chat.id]?.OptionsParts4_6 || '4'
+  await testsServices.put1Opus(part4_5, lang, msg, bot)
+}
+
 
 async function showOpus(result, bot, msg, lang) {
   const chatId = msg.chat.id

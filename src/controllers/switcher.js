@@ -111,8 +111,9 @@ async function handler(bot, msg) {
       break
     case '2_4':
     case '2_5':
-      selectedByUser[chatId].OptionsParts4_5 = rightmostChar
-      await tests.OptionsParts4_5(bot, msg, lang)
+    case '2_6':
+      selectedByUser[chatId].OptionsParts4_6 = rightmostChar
+      await tests.OptionsParts4_6(bot, msg, lang)
       break
     case '3_1':
     case '3_2':
@@ -123,6 +124,9 @@ async function handler(bot, msg) {
     case '5_2':
       selectedByUser[chatId].size = rightmostChar
       await tests.getOpus(bot, msg, lang)
+      break
+    case '5_3':
+      await tests.putOpus(bot, msg, lang)
       break
     case '9_1':
     case '9_2':

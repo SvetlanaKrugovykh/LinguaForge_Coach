@@ -12,11 +12,17 @@ module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 }
 
 module.exports.get1Opus = async function (part4_5, lang, msg, bot) {
-
   const result = module.exports.getOpuses(part4_5, lang, msg, bot, '1')
   return result
 
 }
+
+
+module.exports.put1Opus = async function (part4_5, lang, msg, bot) {
+
+}
+
+
 module.exports.getAllTests = async function (part1_3, lang, msg, bot) {
 
   const result = module.exports.getTests(part1_3, lang, msg, bot, 'ALL')
