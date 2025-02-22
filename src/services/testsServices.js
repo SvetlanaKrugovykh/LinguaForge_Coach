@@ -88,8 +88,15 @@ module.exports.evaluateTest = async function (msg, bot, lang) {
 
 module.exports.compareUserAnswer = async function (msg, bot, lang) {
   try {
-    const answers = selectedByUser[msg.chat.id].answerSet
-    const correctAnswers = selectedByUser[msg.chat.id].currentTest.correct
+    const answers = selectedByUser[msg.chat.id]?.answerSet
+    const currentTest = selectedByUser[msg.chat.id]?.currentTest
+
+    if (!answers || !currentTest || !currentTest.correct) {
+      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_10']}`, { parse_mode: 'HTML' }) // Сообщение об ошибке
+      return 0
+    }
+
+    const correctAnswers = currentTest.correct
 
     const correctMap = correctAnswers.split(/(?<=\d\.\s[a-z]\))/).reduce((acc, answer) => {
       const [question, correctOption] = answer.trim().split(/\.\s/)
