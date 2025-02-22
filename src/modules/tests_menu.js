@@ -77,7 +77,6 @@ async function executeResult(result, bot, msg, lang) {
 
   try {
     selectedByUser[chatId].currentTest = result
-
     const optionsWithPrawdaFalsz = result.options.replace(/prawda\/fałsz/g, 'a) prawda b) fałsz')
     const options = optionsWithPrawdaFalsz.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
     const formattedText = result.text.replace(/(\d{1,3}\.)/g, '\n\n$1')
@@ -113,6 +112,9 @@ async function executeResult(result, bot, msg, lang) {
         resize_keyboard: true,
       }
     })
+
+    result.correct = result.correct.replace(/(\d{1,3}\.)\s*prawda/g, '$1 a)').replace(/(\d{1,3}\.)\s*fałsz/g, '$1 b)')
+
   } catch (error) {
     console.error(error)
   }
