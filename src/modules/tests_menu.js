@@ -81,15 +81,16 @@ async function executeResult(result, bot, msg, lang) {
     const options = result.options.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
     const formattedText = result.text.replace(/(\d{1,3}\.)/g, '\n\n$1')
 
-    const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${options}`
+    const updatedOptions = options.replace(/(\d{1,3}\.)/g, '\n\n$1')
+    const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${updatedOptions}`
     await sendTgMsg(bot, chatId, question)
 
     const numberMatchesText = formattedText.match(/\d{1,3}\./g)
-    const numberMatchesOptions = options.match(/\d{1,3}\./g)
+    const numberMatchesOptions = updatedOptions.match(/\d{1,3}\./g)
 
     const numberMatches = [...new Set([...(numberMatchesText || []), ...(numberMatchesOptions || [])])]
     const numbers = numberMatches ? numberMatches.map(num => num.trim().replace('.', '')) : []
-    const letters = result.options.match(/[a-z]\)/g).map(letter => letter[0])
+    const letters = [...new Set(result.options.match(/[a-z]\)/g).map(letter => letter[0]))]
 
     const keyboard = []
     numbers.forEach(num => {
