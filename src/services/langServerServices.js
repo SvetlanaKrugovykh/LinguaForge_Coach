@@ -27,6 +27,7 @@ module.exports.getVoiceFromTxt = async function (text, lang, msg, bot) {
 
 module.exports.getLangData = async function (text, msg, bot, lang) {
   try {
+    console.log(`${process.env.SERVER_URL}/co-to-jest`)
     const response = await axios.post(`${process.env.SERVER_URL}/co-to-jest`, {
       "text": text
     }, {
