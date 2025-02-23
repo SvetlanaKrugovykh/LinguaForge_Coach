@@ -106,12 +106,16 @@ async function handler(bot, msg) {
     case '2_1':
     case '2_2':
     case '2_3':
+      selectedByUser[chatId].currentTest = {}
+      selectedByUser[chatId].answerSet = []
       selectedByUser[chatId].OptionsParts1_3 = rightmostChar
       await tests.OptionsParts1_3(bot, msg, lang)
       break
     case '2_4':
     case '2_5':
     case '2_6':
+      selectedByUser[chatId].currentOpus = {}
+      selectedByUser[chatId].answerSet = []
       selectedByUser[chatId].OptionsParts4_6 = rightmostChar
       await tests.OptionsParts4_6(bot, msg, lang)
       break
