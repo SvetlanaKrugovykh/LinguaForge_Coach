@@ -84,8 +84,10 @@ async function handler(bot, msg) {
       }
       break
     case '0_5':
+      selectedByUser[chatId].text = ''
       await textInput(bot, msg, data)
       await menu.translation(bot, msg, data)
+      selectedByUser[chatId].text = ''
       break
     case '0_7':
       await menu.commonTestsMenu(bot, msg, true)
