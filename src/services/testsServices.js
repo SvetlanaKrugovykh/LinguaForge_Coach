@@ -92,7 +92,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
     const currentTest = selectedByUser[msg.chat.id]?.currentTest
 
     if (!answers || !currentTest || !currentTest.correct) {
-      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_10']}`, { parse_mode: 'HTML' }) // Сообщение об ошибке
+      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_10']}`, { parse_mode: 'HTML' })
       return 0
     }
 

@@ -89,10 +89,18 @@ async function executeResult(result, bot, msg, lang) {
     const numberMatchesOptions = updatedOptions.match(/\d{1,3}\./g)
 
     const numberMatches = [...new Set([...(numberMatchesText || []), ...(numberMatchesOptions || [])])]
-    const numbers = numberMatches ? numberMatches.map(num => num.trim().replace('.', '')) : []
+    let numbers = numberMatches ? numberMatches.map(num => num.trim().replace('.', '')) : []
 
     const letterMatches = options.match(/[a-z]\)/g)
-    const letters = letterMatches ? [...new Set(letterMatches.map(letter => letter[0]))] : []
+    let letters = letterMatches ? [...new Set(letterMatches.map(letter => letter[0]))] : []
+
+    if (numbers.length === 0 && letters.length > 0) {
+      numbers = ['1']
+    }
+
+    if (letters.length === 0 && numbers.length > 0) {
+      letters = ['a', 'b', 'c']
+    }
 
     const keyboard = []
     numbers.forEach(num => {
