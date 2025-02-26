@@ -68,30 +68,41 @@ module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = tr
     const collectedMessages = []
 
     const handleMessage = async (message) => {
-      if (message.text) {
-        collectedMessages.push({ type: 'text', content: message.text })
-      } else if (message.photo) {
-        const fileId = message.photo[message.photo.length - 1].file_id
-        collectedMessages.push({ type: 'photo', fileId })
-      } else if (message.document) {
-        const fileId = message.document.file_id
-        collectedMessages.push({ type: 'document', fileId })
-      } else if (message.audio) {
-        const fileId = message.audio.file_id
-        collectedMessages.push({ type: 'audio', fileId })
-      } else if (message.voice) {
-        const fileId = message.voice.file_id
-        collectedMessages.push({ type: 'voice', fileId })
+      if (message.chat.id === chatId) {
+        if (message.text) {
+          collectedMessages.push({ type: 'text', content: message.text })
+        } else if (message.photo) {
+          const fileId = message.photo[message.photo.length - 1].file_id
+          collectedMessages.push({ type: 'photo', fileId })
+        } else if (message.document) {
+          const fileId = message.document.file_id
+          collectedMessages.push({ type: 'document', fileId })
+        } else if (message.audio) {
+          const fileId = message.audio.file_id
+          collectedMessages.push({ type: 'audio', fileId })
+        } else if (message.voice) {
+          const fileId = message.voice.file_id
+          collectedMessages.push({ type: 'voice', fileId })
+        }
       }
     }
 
-    bot.on('message', async (message) => {
-      if (message.chat.id === chatId) {
-        await handleMessage(message)
-      }
-    })
+    bot.on('message', handleMessage)
 
-    await new Promise((resolve) => setTimeout(resolve, 30000))
+    await new Promise((resolve) => {
+      const timeout = setTimeout(() => {
+        bot.removeListener('message', handleMessage)
+        resolve()
+      }, 30000)
+
+      bot.on('message', (message) => {
+        if (message.chat.id === chatId) {
+          clearTimeout(timeout)
+          bot.removeListener('message', handleMessage)
+          resolve()
+        }
+      })
+    })
 
     for (const message of collectedMessages) {
       if (message.type === 'text') {
