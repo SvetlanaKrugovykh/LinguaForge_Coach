@@ -7,6 +7,7 @@ const langS = require('../services/langServerServices')
 const { globalBuffer, selectedByUser } = require('../globalBuffer')
 const { pinNativeLanguage } = require('../services/userSetterService')
 const { getFromUserFile } = require('../services/userGetterServices')
+const evS = require('../services/evaluationService')
 require('dotenv').config()
 
 function getCallbackData(text) {
@@ -133,6 +134,9 @@ async function handler(bot, msg) {
       break
     case '5_3':
       await tests.putOpus(bot, msg, lang)
+      break
+    case '5_4':
+      await evS.gotoEvaluate(bot, msg, lang, selectedByUser[chatId].OptionsParts4_6)
       break
     case '5_5':
       await langS.SendVoiceOutOpus(bot, msg, lang)

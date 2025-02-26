@@ -59,7 +59,7 @@ module.exports.chooseNativeLanguageMenu = async function (bot, msg, lang = "en")
   })
 }
 
-module.exports.notTextScene = async function (bot, msg, lang = "en") {
+module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = true, voice = false) {
   const GROUP_ID = process.env.GROUP_ID
   try {
     const chatId = msg.chat.id
@@ -95,9 +95,9 @@ module.exports.notTextScene = async function (bot, msg, lang = "en") {
 
     for (const message of collectedMessages) {
       if (message.type === 'text') {
-        await bot.sendMessage(GROUP_ID, `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):\n${message.content}`, { parse_mode: "HTML" })
+        if (toSend) await bot.sendMessage(GROUP_ID, `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):\n${message.content}`, { parse_mode: "HTML" })
       } else {
-        await bot.sendMessage(GROUP_ID, `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):`, { parse_mode: "HTML" })
+        if (toSend) await bot.sendMessage(GROUP_ID, `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):`, { parse_mode: "HTML" })
         if (message.type === 'photo') {
           await bot.sendPhoto(GROUP_ID, message.fileId)
         } else if (message.type === 'document') {
@@ -105,33 +105,24 @@ module.exports.notTextScene = async function (bot, msg, lang = "en") {
         } else if (message.type === 'audio') {
           await bot.sendAudio(GROUP_ID, message.fileId)
         } else if (message.type === 'voice') {
-          const dirPath = path.join(__dirname, '../../../users/downloads')
+          const dirPath = process.env.TEMP_DOWNLOADS_CATALOG
           fs.mkdirSync(dirPath, { recursive: true })
           const filePath = path.join(dirPath, `${message.fileId}.ogg`)
           await downloadFile(bot, message.fileId, filePath)
-          const response = await callSpeechToTxt({ file: { path: filePath, originalname: `${message.fileId}.ogg` } })
-          const textFromVoice = response.replyData?.translated_text?.[0]
-          if (typeof textFromVoice === 'string' && textFromVoice.trim().length > 0) {
-            selectedByUser[msg.chat.id].text = textFromVoice
-            await bot.sendMessage(msg.chat.id, textFromVoice)
-            const translatedText = await callTranslate(bot, msg)
-            if (typeof translatedText === 'string' && translatedText.trim().length > 0) {
-              await bot.sendMessage(msg.chat.id, translatedText)
-            }
-          }
-          if (process.env.VOICE_TO_GROUP === 'true') await bot.sendVoice(GROUP_ID, message.fileId)
-          console.log(`Voice file saved to ${filePath}`)
+          return filePath
         }
       }
     }
 
-    await bot.sendMessage(chatId, texts[lang]['0_4'], { parse_mode: "HTML" })
-
+    if (toSend) {
+      await bot.sendMessage(chatId, texts[lang]['0_4'], { parse_mode: "HTML" })
+    }
   } catch (err) {
     console.log(err)
-    await bot.sendMessage(msg.chat.id, texts[lang]['0_5'])
+    await bot.sendMessage(msg.chat.id, texts[lang]['0_1'])
   }
 }
+
 
 async function blockMenu(bot, msg, lang = "en") {
   await bot.sendMessage(msg.chat.id, texts[lang]['block'], {})
