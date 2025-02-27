@@ -78,6 +78,11 @@ async function executeResult(result, bot, msg, lang) {
   try {
     selectedByUser[chatId].currentTest = result
 
+    if (!result?.options && !result?.text) {
+      await bot.sendMessage(chatId, `${t_txt[lang]['0_13']}`, { parse_mode: 'HTML' })
+      return
+    }
+
     let optionsWithPrawdaFalsz
     if (result?.options) {
       optionsWithPrawdaFalsz = result.options.replace(/prawda\/fałsz/g, 'a) prawda b) fałsz')
