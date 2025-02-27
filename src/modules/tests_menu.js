@@ -79,7 +79,7 @@ async function executeResult(result, bot, msg, lang) {
     selectedByUser[chatId].currentTest = result
 
     let optionsWithPrawdaFalsz
-    if (result.options) {
+    if (result?.options) {
       optionsWithPrawdaFalsz = result.options.replace(/prawda\/fałsz/g, 'a) prawda b) fałsz')
     } else {
       optionsWithPrawdaFalsz = 'a) b) c)'
