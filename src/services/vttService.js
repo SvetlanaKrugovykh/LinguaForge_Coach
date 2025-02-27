@@ -7,6 +7,11 @@ require('dotenv').config()
 
 module.exports.getVTT = async function (filePath) {
   try {
+    if (!fs.existsSync(filePath)) {
+      console.error(`Error: File not found at path ${filePath}`)
+      return null
+    }
+
     const form = new FormData()
     form.append('file', fs.createReadStream(filePath))
 
