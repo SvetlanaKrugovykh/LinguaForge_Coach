@@ -79,7 +79,7 @@ async function executeResult(result, bot, msg, lang) {
     selectedByUser[chatId].currentTest = result
 
     if (!result?.options && !result?.text) {
-      await bot.sendMessage(chatId, `${t_txt[lang]['0_13']}`, { parse_mode: 'HTML' })
+      await bot.sendMessage(chatId, `${t_txt[lang]['0_14']}`, { parse_mode: 'HTML' })
       return
     }
 
