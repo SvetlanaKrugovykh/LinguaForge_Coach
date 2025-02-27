@@ -77,7 +77,14 @@ async function executeResult(result, bot, msg, lang) {
 
   try {
     selectedByUser[chatId].currentTest = result
-    const optionsWithPrawdaFalsz = result.options.replace(/prawda\/fałsz/g, 'a) prawda b) fałsz')
+
+    let optionsWithPrawdaFalsz
+    if (result.options) {
+      optionsWithPrawdaFalsz = result.options.replace(/prawda\/fałsz/g, 'a) prawda b) fałsz')
+    } else {
+      optionsWithPrawdaFalsz = 'a) b) c)'
+    }
+
     const options = optionsWithPrawdaFalsz.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
     const formattedText = result.text.replace(/(\d{1,3}\.)/g, '\n\n$1')
 
