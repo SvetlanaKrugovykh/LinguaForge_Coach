@@ -87,12 +87,13 @@ async function executeResult(result, bot, msg, lang) {
 
     const numberMatchesText = formattedText.match(/\d{1,3}\./g)
     const numberMatchesOptions = updatedOptions.match(/\d{1,3}\./g)
-
     const numberMatches = [...new Set([...(numberMatchesText || []), ...(numberMatchesOptions || [])])]
-    let numbers = numberMatches ? numberMatches.map(num => num.trim().replace('.', '')) : []
+    let numbers = numberMatches.map(num => num.trim().replace('.', '')).sort((a, b) => a - b)
 
-    const letterMatches = options.match(/[a-z]\)/g)
-    let letters = letterMatches ? [...new Set(letterMatches.map(letter => letter[0]))] : []
+    const letterMatchesText = formattedText.match(/[a-z]\)/g)
+    const letterMatchesOptions = updatedOptions.match(/[a-z]\)/g)
+    const letterMatches = [...new Set([...(letterMatchesText || []), ...(letterMatchesOptions || [])])]
+    let letters = letterMatches.map(letter => letter[0]).sort()
 
     if (numbers.length === 0 && letters.length > 0) {
       numbers = ['1']
