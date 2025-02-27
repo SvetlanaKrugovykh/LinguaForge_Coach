@@ -107,7 +107,7 @@ async function executeResult(result, bot, msg, lang) {
     numbers.forEach(num => {
       const row = []
       letters.forEach(letter => {
-        row.push({ text: `${num} - ${letter}` })
+        row.push({ text: `${num}\n - \n${letter}` })
       })
       keyboard.push(row)
     })
