@@ -107,7 +107,7 @@ async function executeResult(result, bot, msg, lang) {
     numbers.forEach(num => {
       const row = []
       letters.forEach(letter => {
-        row.push({ text: `<small>${num}▪${letter}</small>` })
+        row.push({ text: `${num}▪${letter}` })
       })
       keyboard.push(row)
     })
@@ -119,8 +119,7 @@ async function executeResult(result, bot, msg, lang) {
       reply_markup: {
         keyboard: keyboard,
         resize_keyboard: true,
-      },
-      parse_mode: 'HTML'
+      }
     })
 
     result.correct = result.correct.replace(/(\d{1,3}\.)\s*prawda/g, '$1 a)').replace(/(\d{1,3}\.)\s*fałsz/g, '$1 b)')
