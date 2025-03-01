@@ -22,7 +22,11 @@ module.exports.callTranslate = async function (bot, msg) {
         direction: dir,
         text: translatedText,
       })
-      translatedText = response.data?.replyData?.translated_text?.[0] || 'Default value if not found'
+
+      translatedText = response.data.translated_text?.[0] ||
+        response.data?.replyData?.translated_text?.[0] ||
+        'Default value if not found'
+
       console.log(translatedText)
       await bot.sendMessage(msg.chat.id, `<b>${dir}:</b>\n${translatedText}`, { parse_mode: 'HTML' })
     }
