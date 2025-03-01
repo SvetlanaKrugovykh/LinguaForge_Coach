@@ -8,6 +8,7 @@ const { users } = require('../users/users.model')
 const { selectedByUser } = require('../globalBuffer')
 const { userSettings } = require('../controllers/userSettings')
 const langS = require('../services/langServerServices')
+const translateS = require('../services/translateService')
 
 module.exports.commonStartMenu = async function (bot, msg) {
   console.log(`/start at ${new Date()} tg_user_id: ${msg.chat.id}`)
@@ -178,4 +179,8 @@ module.exports.downloadPDF = async function (bot, msg, lang = 'pl') {
     console.log(err)
     await bot.sendMessage(msg.chat.id, texts[lang]['0_1'])
   }
+}
+
+module.exports.textTranslation = async function (bot, msg) {
+  await translateS.callTranslate(bot, msg)
 }

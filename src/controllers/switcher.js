@@ -66,6 +66,10 @@ async function handler(bot, msg) {
   const rightmostChar = data.slice(-1)
 
   switch (data) {
+    case '0_0':
+      await textInput(bot, msg, data)
+      await menu.textTranslation(bot, msg)
+      break
     case '0_1':
       await textInput(bot, msg, data)
       await menu.commonChoice(bot, msg, lang)
