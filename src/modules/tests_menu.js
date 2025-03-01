@@ -107,6 +107,12 @@ async function executeResult(result, bot, msg, lang) {
     const letterMatches = [...new Set([...(letterMatchesText || []), ...(letterMatchesOptions || [])])]
     let letters = letterMatches.map(letter => letter[0]).sort()
 
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
+    letters = alphabet.filter(letter => {
+      const lastLetter = letters[letters.length - 1]
+      return letter <= lastLetter && !letters.includes(letter)
+    }).concat(letters)
+
     if (numbers.length === 0 && letters.length > 0) {
       numbers = ['1']
     }
@@ -119,7 +125,7 @@ async function executeResult(result, bot, msg, lang) {
     numbers.forEach(num => {
       const row = []
       letters.forEach(letter => {
-        row.push({ text: `${num}▫${letter}` })
+        row.push({ text: `${num}↔${letter}` })
       })
       keyboard.push(row)
     })
