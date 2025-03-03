@@ -134,7 +134,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
       const discrepancyMessage = discrepancies.map(question => {
         const userAnswer = answers.find(answer => answer.startsWith(question))
         const userOption = userAnswer ? userAnswer.split('↔')[1] : '⁉️'
-        const explanation = explanations[question] ? `\n${t_txt[lang]['0_11']} ${explanations[question]}` : ''
+        const explanation = explanations[question] ? `\n${t_txt[lang]['0_15']} ${explanations[question]}` : ''
         return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question]}${explanation}`
       }).join('\n\n')
 
