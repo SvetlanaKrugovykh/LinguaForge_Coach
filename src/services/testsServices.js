@@ -12,6 +12,22 @@ module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 
 }
 
+module.exports.getSubjects = async function () {
+  try {
+    const response = await axios.post(`${process.env.SERVER_URL}/get-subjects`, {
+      "text": "subject"
+    }, {
+      headers: {
+        Authorization: process.env.LG_SERVER_AUTHORIZATION
+      }
+    })
+
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 module.exports.get1Opus = async function (part4_6, lang, msg, bot) {
   const result = module.exports.getOpuses(part4_6, lang, msg, bot, '1')
   return result

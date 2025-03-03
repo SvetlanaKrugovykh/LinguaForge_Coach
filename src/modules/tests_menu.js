@@ -21,6 +21,22 @@ module.exports.OptionsParts4_6 = async function (bot, msg, lang) {
   })
 }
 
+module.exports.getSubjectsMenu = async function (bot, msg, lang) {
+  const subjects = await testsServices.getSubjects()
+  const buttons = subjects.map(subject => ({ text: subject.subject }))
+  const keyboard = []
+  for (let i = 0; i < buttons.length; i += 3) {
+    keyboard.push(buttons.slice(i, i + 3))
+  }
+
+  await bot.sendMessage(msg.chat.id, t_txt[lang]['0_15'], {
+    reply_markup: {
+      keyboard: keyboard,
+      resize_keyboard: true
+    }
+  })
+}
+
 module.exports.do1Test = async function (bot, msg, lang) {
   console.log('do1Test', selectedByUser[msg.chat.id]?.OptionsParts1_3)
   const part1_3 = selectedByUser[msg.chat.id]?.OptionsParts1_3 || '2'
