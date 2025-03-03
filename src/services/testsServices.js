@@ -89,10 +89,10 @@ module.exports.evaluateTest = async function (msg, bot, lang) {
 
 module.exports.compareUserAnswer = async function (msg, bot, lang) {
   try {
-    const answers = selectedByUser[msg.chat.id]?.answerSet
+    const answers = selectedByUser[msg.chat.id]?.answerSet || []
     const currentTest = selectedByUser[msg.chat.id]?.currentTest
 
-    if (!answers || !currentTest || !currentTest.correct) {
+    if (!currentTest || !currentTest.correct) {
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_10']}`, { parse_mode: 'HTML' })
       return 0
     }
@@ -114,8 +114,10 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
       return acc
     }, {})
 
-    const discrepancies = answers.filter(answer => {
-      const [question, userOption] = answer.split('↔')
+    const discrepancies = Object.keys(correctMap).filter(question => {
+      const userAnswer = answers.find(answer => answer.startsWith(question))
+      if (!userAnswer) return true
+      const [, userOption] = userAnswer.split('↔')
       return correctMap[question] !== userOption
     })
 
@@ -124,9 +126,11 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
       return 1
     } else {
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_6']}`, { parse_mode: 'HTML' })
-      const discrepancyMessage = discrepancies.map(discrepancy => {
-        const [question, userOption] = discrepancy.split('↔')
-        return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question] || 'undefined'}\n${t_txt[lang]['0_11']} ${explanations[question] || 'No explanation available'}`
+      const discrepancyMessage = discrepancies.map(question => {
+        const userAnswer = answers.find(answer => answer.startsWith(question))
+        const userOption = userAnswer ? userAnswer.split('↔')[1] : '⁉️'
+        const explanation = explanations[correctMap[question]] ? `\n${t_txt[lang]['0_11']} ${explanations[correctMap[question]]}` : ''
+        return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question]}${explanation}`
       }).join('\n\n')
 
       await sendTgMsg(bot, msg.chat.id, `${t_txt[lang]['0_7']}:\n${discrepancyMessage}`)
@@ -136,6 +140,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
     console.error(error)
   }
 }
+
 module.exports.saveUserAnswerData = async function (msg, bot, lang, choiceText) {
   if (!selectedByUser[msg.chat.id].answerSet) selectedByUser[msg.chat.id].answerSet = []
 
