@@ -98,14 +98,6 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
     }
 
     const correctAnswers = currentTest.correct
-    const explanations = currentTest.explanation ? currentTest.explanation.split('. ').reduce((acc, explanation) => {
-      const [question, explanationText] = explanation.split(' - ')
-      if (question && explanationText) {
-        acc[question.trim()] = explanationText.trim()
-      }
-      return acc
-    }, {}) : {}
-
     const correctMap = correctAnswers.split(/(?<=\d\.\s[a-z]\))/).reduce((acc, answer) => {
       const [question, correctOption] = answer.trim().split(/\.\s/)
       if (correctOption) {
@@ -113,6 +105,19 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
       }
       return acc
     }, {})
+
+    const explanations = currentTest.explanation ? currentTest.explanation.split('. ').reduce((acc, explanation, index) => {
+      const questionNumber = (index + 1).toString()
+      const [_, explanationText] = explanation.split(' - ')
+      acc[questionNumber] = explanationText ? explanationText.trim() : ''
+      return acc
+    }, {}) : {}
+
+    Object.keys(correctMap).forEach(question => {
+      if (!explanations[question]) {
+        explanations[question] = ''
+      }
+    })
 
     const discrepancies = Object.keys(correctMap).filter(question => {
       const userAnswer = answers.find(answer => answer.startsWith(question))
@@ -129,7 +134,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
       const discrepancyMessage = discrepancies.map(question => {
         const userAnswer = answers.find(answer => answer.startsWith(question))
         const userOption = userAnswer ? userAnswer.split('↔')[1] : '⁉️'
-        const explanation = explanations[correctMap[question]] ? `\n${t_txt[lang]['0_11']} ${explanations[correctMap[question]]}` : ''
+        const explanation = explanations[question] ? `\n${t_txt[lang]['0_11']} ${explanations[question]}` : ''
         return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question]}${explanation}`
       }).join('\n\n')
 
