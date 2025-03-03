@@ -3,6 +3,7 @@ const fs = require('fs')
 const { t_txt } = require('../data/tests_keyboard')
 const userM = require('./userMemorizeService')
 const { selectedByUser } = require('../globalBuffer')
+const { sendTgMsg } = require('./commonService')
 
 module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 
@@ -97,6 +98,13 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
     }
 
     const correctAnswers = currentTest.correct
+    const explanations = currentTest.explanation ? currentTest.explanation.split('. ').reduce((acc, explanation) => {
+      const [question, explanationText] = explanation.split(' - ')
+      if (question && explanationText) {
+        acc[question.trim()] = explanationText.trim()
+      }
+      return acc
+    }, {}) : {}
 
     const correctMap = correctAnswers.split(/(?<=\d\.\s[a-z]\))/).reduce((acc, answer) => {
       const [question, correctOption] = answer.trim().split(/\.\s/)
@@ -118,17 +126,16 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_6']}`, { parse_mode: 'HTML' })
       const discrepancyMessage = discrepancies.map(discrepancy => {
         const [question, userOption] = discrepancy.split('↔')
-        return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question] || 'undefined'}`
-      }).join('\n')
+        return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question] || 'undefined'}\n${t_txt[lang]['0_11']} ${explanations[question] || 'No explanation available'}`
+      }).join('\n\n')
 
-      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_7']}:\n${discrepancyMessage}`, { parse_mode: 'HTML' })
+      await sendTgMsg(bot, msg.chat.id, `${t_txt[lang]['0_7']}:\n${discrepancyMessage}`)
       return 0
     }
   } catch (error) {
     console.error(error)
   }
 }
-
 module.exports.saveUserAnswerData = async function (msg, bot, lang, choiceText) {
   if (!selectedByUser[msg.chat.id].answerSet) selectedByUser[msg.chat.id].answerSet = []
 
