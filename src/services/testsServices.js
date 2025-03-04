@@ -63,6 +63,28 @@ module.exports.put1Opus = async function (part4_6, lang, msg, bot) {
   }
 }
 
+module.exports.putWord = async function (lang, msg, bot) {
+  try {
+    const currentWord = selectedByUser[msg.chat.id]?.words
+
+    if (!currentWord) {
+      return null
+    }
+
+    const response = await axios.post(`${process.env.SERVER_URL}/user-word-save`, {
+      query: { "userId": msg.chat.id, "part": 'w', "lang": lang, currentWord, success: 1 }
+    }, {
+      headers: {
+        Authorization: process.env.LG_SERVER_AUTHORIZATION
+      }
+    })
+
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
   try {
     const response = await axios.post(`${process.env.SERVER_URL}/get-test`, {

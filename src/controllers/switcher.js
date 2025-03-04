@@ -105,6 +105,7 @@ async function handler(bot, msg) {
       break
     case '0_16':
       await langS.getLangData(subj__, msg, bot, lang)
+      await menu.wordPinMenu(bot, msg, lang)
       break
     case '1_1':
       selectedByUser[chatId].changed = false
@@ -153,6 +154,9 @@ async function handler(bot, msg) {
       break
     case '5_5':
       await langS.SendVoiceOutOpus(bot, msg, lang)
+      break
+    case '5_33':
+      await tests.putWord(bot, msg, lang)
       break
     case '9_1':
     case '9_2':

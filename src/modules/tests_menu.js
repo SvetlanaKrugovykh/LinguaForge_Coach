@@ -58,10 +58,14 @@ module.exports.getOpus = async function (bot, msg, lang) {
 }
 
 module.exports.putOpus = async function (bot, msg, lang) {
-  console.log('getOpus', selectedByUser[msg.chat.id]?.OptionsParts4_6)
   const part4_6 = selectedByUser[msg.chat.id]?.OptionsParts4_6 || '4'
   await testsServices.put1Opus(part4_6, lang, msg, bot)
   selectedByUser[msg.chat.id].currentOpus = null
+}
+
+module.exports.putWord = async function (bot, msg, lang) {
+  await testsServices.putWord(lang, msg, bot)
+  selectedByUser[msg.chat.id].words = null
 }
 
 module.exports.showOpus = async function (result, bot, msg, lang) {

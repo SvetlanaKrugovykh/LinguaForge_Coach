@@ -4,6 +4,7 @@ const axios = require('axios')
 const { menuStarter } = require('../controllers/clientsAdmin')
 require('dotenv').config()
 const { buttonsConfig, texts } = require('../data/keyboard')
+const { testsMenu } = require('../data/tests_keyboard')
 const { users } = require('../users/users.model')
 const { selectedByUser } = require('../globalBuffer')
 const { userSettings } = require('../controllers/userSettings')
@@ -34,6 +35,14 @@ module.exports.commonTestsMenu = async function (bot, msg, data, lang = 'pl') {
   await bot.sendMessage(msg.chat.id, buttonsConfig["examPartsMenu"].title[lang], {
     reply_markup: {
       keyboard: buttonsConfig["examPartsMenu"].buttons[lang],
+      resize_keyboard: true
+    }
+  })
+}
+module.exports.wordPinMenu = async function (bot, msg, lang = 'pl') {
+  await bot.sendMessage(msg.chat.id, testsMenu['pinWord'].title[lang], {
+    reply_markup: {
+      keyboard: testsMenu['pinWord'].buttons[lang],
       resize_keyboard: true
     }
   })
