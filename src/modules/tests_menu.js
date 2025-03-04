@@ -77,13 +77,30 @@ module.exports.showOpus = async function (result, bot, msg, lang) {
     const subject = result?.example?.subject ? `${t_txt[lang]['0_11']} ${result.example.subject}` : ''
     const exampleText = result?.example?.example ? `${t_txt[lang]['0_12']}\n${result.example.example}` : ''
 
-    const sortedWords = result.words.sort((a, b) => a.word.localeCompare(b.word))
+    const message = `${subject}\n\n${exampleText}`
+    await sendTgMsg(bot, chatId, message)
 
-    const wordsText = sortedWords.map(word => {
-      return `<b>${word.word}</b>\nEN: ${word.en}\nUK: ${word.uk}\nRU: ${word.ru}`
-    }).join('\n\n')
+  } catch (error) {
+    console.error(error)
+  }
+}
 
-    const message = `${subject}\n\n${exampleText}\n\n${t_txt[lang]['0_13']}\n\n${wordsText}`
+module.exports.showOpus = async function (result, bot, msg, lang) {
+  const chatId = msg.chat.id
+  if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
+  try {
+    selectedByUser[chatId].currentOpus = result
+    if (!result) {
+      await bot.sendMessage(chatId, t_txt[lang]['0_10'], { parse_mode: 'HTML' })
+      return
+    }
+    const subject = result?.example?.subject ? `${t_txt[lang]['0_11']} ${result.example.subject}` : ''
+    let exampleText = result?.example?.example ? `${t_txt[lang]['0_12']}\n${result.example.example}` : ''
+
+    exampleText = exampleText
+      .replace(/([.!?])\s*(?=[A-Z])/g, '$1\n\n')
+
+    const message = `${subject}\n\n${exampleText}`
     await sendTgMsg(bot, chatId, message)
 
   } catch (error) {
