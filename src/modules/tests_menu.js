@@ -64,29 +64,9 @@ module.exports.putOpus = async function (bot, msg, lang) {
   selectedByUser[msg.chat.id].currentOpus = null
 }
 
-
 module.exports.showOpus = async function (result, bot, msg, lang) {
   const chatId = msg.chat.id
-  if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
-  try {
-    selectedByUser[chatId].currentOpus = result
-    if (!result) {
-      await bot.sendMessage(chatId, t_txt[lang]['0_10'], { parse_mode: 'HTML' })
-      return
-    }
-    const subject = result?.example?.subject ? `${t_txt[lang]['0_11']} ${result.example.subject}` : ''
-    const exampleText = result?.example?.example ? `${t_txt[lang]['0_12']}\n${result.example.example}` : ''
-
-    const message = `${subject}\n\n${exampleText}`
-    await sendTgMsg(bot, chatId, message)
-
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-module.exports.showOpus = async function (result, bot, msg, lang) {
-  const chatId = msg.chat.id
+  selectedByUser[chatId].subject = result?.example?.subject
   if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
   try {
     selectedByUser[chatId].currentOpus = result
@@ -103,23 +83,17 @@ module.exports.showOpus = async function (result, bot, msg, lang) {
     const message = `${subject}\n\n${exampleText}`
     await sendTgMsg(bot, chatId, message)
 
+    await bot.sendMessage(msg.chat.id, testsMenu['words'].title[lang], {
+      reply_markup: {
+        keyboard: testsMenu['words'].buttons[lang],
+        resize_keyboard: true
+      }
+    })
+
   } catch (error) {
     console.error(error)
   }
-
-  const keyboard = [
-    [{ text: `${t_txt[lang]['0_16']}`, callback_data: '0_16' }, { text: '↩️', callback_data: '0_3' }]
-  ]
-
-  await bot.sendMessage(chatId, `${t_txt[lang]['0_15']}`, {
-    reply_markup: {
-      keyboard: keyboard,
-      resize_keyboard: true
-    }
-  })
-
 }
-
 
 async function executeResult(result, bot, msg, lang) {
   const chatId = msg.chat.id

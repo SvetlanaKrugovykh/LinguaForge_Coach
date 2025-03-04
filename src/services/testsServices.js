@@ -34,6 +34,7 @@ module.exports.getTxt4Words = async function (msg, bot, lang) {
   const result = await module.exports.get1Opus('6', lang, msg, bot, subj)
   await testM.showOpus(result, bot, msg, lang)
 }
+
 module.exports.get1Opus = async function (part4_6, lang, msg, bot, subj = '') {
   const result = module.exports.getOpuses(part4_6, lang, msg, bot, '1', subj)
   return result

@@ -61,6 +61,7 @@ async function handler(bot, msg) {
 
   if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
   let lang = selectedByUser[chatId]?.language || 'pl'
+  const subj__ = 'Subject:' + selectedByUser[chatId]?.subject || ''
 
   console.log('The choice is:', data)
   const rightmostChar = data.slice(-1)
@@ -103,7 +104,7 @@ async function handler(bot, msg) {
       await menu.settingsMenu(bot, msg, lang)
       break
     case '0_16':
-      console.log('0_16')
+      await langS.getLangData(subj__, msg, bot, lang)
       break
     case '1_1':
       selectedByUser[chatId].changed = false
