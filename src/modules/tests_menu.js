@@ -23,10 +23,16 @@ module.exports.OptionsParts4_6 = async function (bot, msg, lang) {
 
 module.exports.getSubjectsMenu = async function (bot, msg, lang) {
   const subjects = await testsServices.getSubjects()
-  const buttons = subjects.map(subject => ({ text: subject.subject }))
+  const buttons = subjects.map(subject => ({ text: `📦 ${subject.subject}` }))
   const keyboard = []
   for (let i = 0; i < buttons.length; i += 3) {
     keyboard.push(buttons.slice(i, i + 3))
+  }
+
+  if (keyboard.length > 0) {
+    keyboard[keyboard.length - 1].push({ text: '↩️', callback_data: '0_3' })
+  } else {
+    keyboard.push([{ text: '↩️', callback_data: '0_3' }])
   }
 
   await bot.sendMessage(msg.chat.id, t_txt[lang]['0_15'], {
@@ -48,7 +54,7 @@ module.exports.getOpus = async function (bot, msg, lang) {
   console.log('getOpus', selectedByUser[msg.chat.id]?.OptionsParts4_6)
   const part4_5 = selectedByUser[msg.chat.id]?.OptionsParts4_6 || '4'
   const result = await testsServices.get1Opus(part4_5, lang, msg, bot)
-  await showOpus(result, bot, msg, lang)
+  await module.exports.showOpus(result, bot, msg, lang)
 }
 
 module.exports.putOpus = async function (bot, msg, lang) {
@@ -59,7 +65,7 @@ module.exports.putOpus = async function (bot, msg, lang) {
 }
 
 
-async function showOpus(result, bot, msg, lang) {
+module.exports.showOpus = async function (result, bot, msg, lang) {
   const chatId = msg.chat.id
   if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
   try {

@@ -4,6 +4,7 @@ const { t_txt } = require('../data/tests_keyboard')
 const userM = require('./userMemorizeService')
 const { selectedByUser } = require('../globalBuffer')
 const { sendTgMsg } = require('./commonService')
+const testM = require('../modules/tests_menu')
 
 module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 
@@ -28,8 +29,13 @@ module.exports.getSubjects = async function () {
   }
 }
 
-module.exports.get1Opus = async function (part4_6, lang, msg, bot) {
-  const result = module.exports.getOpuses(part4_6, lang, msg, bot, '1')
+module.exports.getTxt4Words = async function (msg, bot, lang) {
+  const subj = msg.text.replace('📦 ', '')
+  const result = await module.exports.get1Opus('6', lang, msg, bot, subj)
+  await testM.showOpus(result, bot, msg, lang)
+}
+module.exports.get1Opus = async function (part4_6, lang, msg, bot, subj = '') {
+  const result = module.exports.getOpuses(part4_6, lang, msg, bot, '1', subj)
   return result
 
 }
@@ -78,11 +84,11 @@ module.exports.getTests = async function (part1_3, lang, msg, bot, total) {
   }
 }
 
-module.exports.getOpuses = async function (part4_6, lang, msg, bot, total) {
+module.exports.getOpuses = async function (part4_6, lang, msg, bot, total, subj = '') {
   try {
     const size = selectedByUser[msg.chat.id].size || '1'
     const response = await axios.post(`${process.env.SERVER_URL}/get-opus`, {
-      query: { "userId": msg.chat.id, "part4_6": part4_6, "lang": lang, "size": size }
+      query: { "userId": msg.chat.id, "part4_6": part4_6, "lang": lang, "size": size, "subject": subj }
     }, {
       headers: {
         Authorization: process.env.LG_SERVER_AUTHORIZATION

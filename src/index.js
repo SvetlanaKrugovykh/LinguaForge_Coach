@@ -2,7 +2,6 @@ const { handler } = require('./controllers/switcher')
 const { isThisGroupId } = require('./modules/bot')
 const { bot } = require('./globalBuffer')
 const menu = require('./modules/common_menu')
-const tests = require('./modules/tests_menu')
 const testS = require('./services/testsServices')
 const { globalBuffer } = require('./globalBuffer')
 const getU = require('./services/userGetterServices')
@@ -27,6 +26,10 @@ bot.on('text', async (msg) => {
 
   if (msg.text.includes('↔')) {
     await testS.saveUserAnswerData(msg, bot, lang, msg.text)
+    return
+  }
+  if (msg.text.includes('📦')) {
+    await testS.getTxt4Words(msg, bot, lang)
     return
   }
   if (msg.text.includes('➡️')) {
