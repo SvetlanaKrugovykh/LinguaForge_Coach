@@ -102,6 +102,9 @@ async function handler(bot, msg) {
       pinNativeLanguage(data, msg)
       await menu.settingsMenu(bot, msg, lang)
       break
+    case '0_16':
+      console.log('0_16')
+      break
     case '1_1':
       selectedByUser[chatId].changed = false
       await menu.downloadPDF(bot, msg, lang)
