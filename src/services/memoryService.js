@@ -1,4 +1,6 @@
 const { bot, selectedByUser } = require('../globalBuffer')
+const langS = require('./langServerServices')
+const menu = require('../modules/common_menu')
 
 module.exports.doWordMemorize = async function (msg) {
   if (!msg?.chat?.id) return
@@ -13,11 +15,13 @@ module.exports.doWordMemorize = async function (msg) {
     const word = words[0]?.word
     if (word) {
       selectedByUser[msg.chat.id].doWordMemorize.push(word)
+      await bot.sendMessage(msg.chat.id, `✍ : ${word}`)
     }
   } else if (words && Array.isArray(words.words) && words.words[0]) {
     const word = words.words[0]?.word
     if (word) {
       selectedByUser[msg.chat.id].doWordMemorize.push(word)
+      await bot.sendMessage(msg.chat.id, `✍ : ${word}`)
     }
   } else {
     console.error('No words found for user:', msg.chat.id)
@@ -27,7 +31,7 @@ module.exports.doWordMemorize = async function (msg) {
 
 async function sendReminder(chatId, text) {
   const lang = 'pl'
-  getLangData(text, chatId, bot, lang)
+  await langS.getLangData(text, chatId, bot, lang)
 }
 
 module.exports.checkAndSendReminders = async function () {

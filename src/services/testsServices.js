@@ -65,15 +65,32 @@ module.exports.put1Opus = async function (part4_6, lang, msg, bot) {
 
 module.exports.putWord = async function (lang, msg, bot) {
   try {
-    const currentOpus = selectedByUser[msg.chat.id]?.words?.words[0]
+    let currentOpus
+
+    if (Array.isArray(selectedByUser[msg.chat.id]?.words)) {
+      currentOpus = selectedByUser[msg.chat.id]?.words[0]
+    } else if (Array.isArray(selectedByUser[msg.chat.id]?.words?.words)) {
+      currentOpus = selectedByUser[msg.chat.id]?.words?.words[0]
+    }
 
     if (!currentOpus) {
       return null
     }
 
     if (!selectedByUser[msg.chat.id]?.doWordMemorize) selectedByUser[msg.chat.id].doWordMemorize = []
-    const index = selectedByUser[msg.chat.id].doWordMemorize.indexOf(currentOpus)
-    if (index !== -1) selectedByUser[msg.chat.id].doWordMemorize.splice(index, 1)
+
+    const index = selectedByUser[msg.chat.id].doWordMemorize.findIndex(word => {
+      if (typeof word === 'string') {
+        return word === currentOpus.word
+      } else {
+        return word.word === currentOpus.word
+      }
+    })
+
+    if (index !== -1) {
+      const removedWord = selectedByUser[msg.chat.id].doWordMemorize.splice(index, 1)[0]
+      await bot.sendMessage(msg.chat.id, `♥️: ${removedWord.word || removedWord}`)
+    }
 
     const response = await axios.post(`${process.env.SERVER_URL}/user-word-save`, {
       query: { "userId": msg.chat.id, "part": 'w', "lang": lang, currentOpus, success: 1 }
