@@ -79,7 +79,14 @@ async function handler(bot, msg) {
       await menu.notTextScene(bot, msg)
       break
     case '0_3':
-      await menu.settingsMenu(bot, msg, lang)
+    case '0_4':
+      await menu.commonStartMenu(bot, msg, true)
+      break
+    case '0_5':
+      selectedByUser[chatId].text = ''
+      await textInput(bot, msg, data)
+      await menu.translation(bot, msg, data)
+      selectedByUser[chatId].text = ''
       break
     case '0_6':
       if (!selectedByUser[chatId].text || selectedByUser[chatId].text === '') {
@@ -89,14 +96,11 @@ async function handler(bot, msg) {
         await langS.getVoiceFromTxt(selectedByUser[chatId].text, 'pl', msg, bot)
       }
       break
-    case '0_5':
-      selectedByUser[chatId].text = ''
-      await textInput(bot, msg, data)
-      await menu.translation(bot, msg, data)
-      selectedByUser[chatId].text = ''
-      break
     case '0_7':
       await menu.commonTestsMenu(bot, msg, true)
+      break
+    case '0_8':
+      await menu.settingsMenu(bot, msg, lang)
       break
     case '0_9':
       if (selectedByUser[chatId]?.changed) return
