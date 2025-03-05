@@ -25,36 +25,36 @@ module.exports.getVoiceFromTxt = async function (text, lang, msg, bot) {
   }
 }
 
-module.exports.getLangData = async function (text, msg, bot, lang) {
+module.exports.getLangData = async function (text, chatId, bot, lang) {
   try {
     let data = ''
     const response = await axios.post(`${process.env.SERVER_URL}/co-to-jest`, {
       "text": text,
-      "userId": msg.chat.id
+      "userId": chatId
     }, {
       headers: {
         Authorization: process.env.LG_SERVER_AUTHORIZATION
       }
     })
-    selectedByUser[msg.chat.id].words = response.data
+    selectedByUser[chatId].words = response.data
     if (response.data && response.data.length > 0) {
       data = response.data.map(item => {
         return createWordCard(item)
       }).join('\n')
-      await bot.sendMessage(msg.chat.id, data, { parse_mode: "HTML" })
+      await bot.sendMessage(chatId, data, { parse_mode: "HTML" })
       return response.data
     } else if (response.data) {
       data = response.data.words.map(item => {
         return createWordCard(item)
       }).join('\n')
       if (data && data !== '')
-        await bot.sendMessage(msg.chat.id, data, { parse_mode: "HTML" })
+        await bot.sendMessage(chatId, data, { parse_mode: "HTML" })
     } else {
-      await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_10']}`, { parse_mode: "HTML" })
+      await bot.sendMessage(chatId, `${t_txt[lang]['0_10']}`, { parse_mode: "HTML" })
       return null
     }
   } catch (error) {
-    console.error(error)
+    await bot.sendMessage(chatId, `${t_txt[lang]['0_10']}`, { parse_mode: "HTML" })
   }
 }
 

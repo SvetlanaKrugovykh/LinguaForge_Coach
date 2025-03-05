@@ -5,6 +5,8 @@ const menu = require('./modules/common_menu')
 const testS = require('./services/testsServices')
 const { globalBuffer } = require('./globalBuffer')
 const getU = require('./services/userGetterServices')
+const cron = require('node-cron')
+const mem = require('./services/memoryService')
 
 
 bot.on('message', async (msg) => {
@@ -63,6 +65,10 @@ bot.on('polling_error', (error) => {
       .then(() => bot.startPolling())
       .catch(err => console.error('Failed to restart polling:', err))
   }
+})
+
+cron.schedule('0 * * * *', () => {
+  mem.checkAndSendReminders()
 })
 
 module.exports = { bot }

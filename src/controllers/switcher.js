@@ -8,6 +8,7 @@ const { globalBuffer, selectedByUser } = require('../globalBuffer')
 const { pinNativeLanguage } = require('../services/userSetterService')
 const { getFromUserFile } = require('../services/userGetterServices')
 const evS = require('../services/evaluationService')
+const mem = require('../services/memoryService')
 require('dotenv').config()
 
 function getCallbackData(text) {
@@ -86,6 +87,7 @@ async function handler(bot, msg) {
       selectedByUser[chatId].text = ''
       await textInput(bot, msg, data)
       await menu.translation(bot, msg, data)
+      await menu.wordPinMenu(bot, msg, lang)
       selectedByUser[chatId].text = ''
       break
     case '0_6':
@@ -108,7 +110,7 @@ async function handler(bot, msg) {
       await menu.settingsMenu(bot, msg, lang)
       break
     case '0_16':
-      await langS.getLangData(subj__, msg, bot, lang)
+      await langS.getLangData(subj__, msg.chat.id, bot, lang)
       await menu.wordPinMenu(bot, msg, lang)
       break
     case '1_1':
@@ -161,6 +163,9 @@ async function handler(bot, msg) {
       break
     case '5_33':
       await tests.putWord(bot, msg, lang)
+      break
+    case '5_34':
+      await mem.doWordMemorize(msg)
       break
     case '9_1':
     case '9_2':

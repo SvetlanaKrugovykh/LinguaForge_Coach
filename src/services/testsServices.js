@@ -71,6 +71,10 @@ module.exports.putWord = async function (lang, msg, bot) {
       return null
     }
 
+    if (!selectedByUser[msg.chat.id]?.doWordMemorize) selectedByUser[msg.chat.id].doWordMemorize = []
+    const index = selectedByUser[msg.chat.id].doWordMemorize.indexOf(currentOpus)
+    if (index !== -1) selectedByUser[msg.chat.id].doWordMemorize.splice(index, 1)
+
     const response = await axios.post(`${process.env.SERVER_URL}/user-word-save`, {
       query: { "userId": msg.chat.id, "part": 'w', "lang": lang, currentOpus, success: 1 }
     }, {
