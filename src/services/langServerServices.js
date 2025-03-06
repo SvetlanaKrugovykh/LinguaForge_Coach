@@ -49,12 +49,14 @@ module.exports.getLangData = async function (text, chatId, bot, lang) {
       }).join('\n')
       if (data && data !== '')
         await bot.sendMessage(chatId, data, { parse_mode: "HTML" })
+      return response.data.words
     } else {
       await bot.sendMessage(chatId, `${t_txt[lang]['0_10']}`, { parse_mode: "HTML" })
       return null
     }
   } catch (error) {
     await bot.sendMessage(chatId, `${t_txt[lang]['0_10']}`, { parse_mode: "HTML" })
+    return null
   }
 }
 

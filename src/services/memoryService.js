@@ -32,7 +32,32 @@ module.exports.doWordMemorize = async function (msg) {
 async function sendReminder(chatId, text) {
   const lang = 'pl'
   await langS.getLangData(text, chatId, bot, lang)
+
+  const inlineKeyboard = {
+    inline_keyboard: [
+      [{ text: '📌 Oznacz słowo jako znane', callback_data: `mark_known_${text}` }]
+    ]
+  }
+
+  await bot.sendMessage(chatId, '📌                          ', {
+    reply_markup: inlineKeyboard
+  })
 }
+
+bot.on('callback_query', async (callbackQuery) => {
+  const chatId = callbackQuery.message.chat.id
+  const data = callbackQuery.data
+
+  if (data.startsWith('mark_known_')) {
+    const text = data.replace('mark_known_', '')
+    //await markWordAsKnown(chatId, text)
+    console.log('Marked as known:', text)
+  }
+
+  await bot.answerCallbackQuery(callbackQuery.id)
+})
+
+
 
 module.exports.checkAndSendReminders = async function () {
   for (const chatId in selectedByUser) {

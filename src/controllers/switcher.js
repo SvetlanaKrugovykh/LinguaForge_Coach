@@ -41,6 +41,7 @@ function getCallbackData(text) {
 
 async function handler(bot, msg) {
   const chatId = msg?.chat?.id
+  let answer = ''
   if (globalBuffer[chatId] === undefined) globalBuffer[chatId] = {}
 
   if (globalBuffer[chatId]?.platform && globalBuffer[chatId]?.senderId) {
@@ -86,8 +87,8 @@ async function handler(bot, msg) {
     case '0_5':
       selectedByUser[chatId].text = ''
       await textInput(bot, msg, data)
-      await menu.translation(bot, msg, data)
-      await menu.wordPinMenu(bot, msg, lang)
+      answer = await menu.translation(bot, msg, data)
+      if (answer) await menu.wordPinMenu(bot, msg, lang)
       selectedByUser[chatId].text = ''
       break
     case '0_6':
@@ -110,8 +111,8 @@ async function handler(bot, msg) {
       await menu.settingsMenu(bot, msg, lang)
       break
     case '0_16':
-      await langS.getLangData(subj__, msg.chat.id, bot, lang)
-      await menu.wordPinMenu(bot, msg, lang)
+      answer = await langS.getLangData(subj__, msg.chat.id, bot, lang)
+      if (answer) await menu.wordPinMenu(bot, msg, lang)
       break
     case '1_1':
       selectedByUser[chatId].changed = false
