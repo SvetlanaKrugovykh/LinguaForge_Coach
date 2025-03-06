@@ -63,9 +63,8 @@ module.exports.putOpus = async function (bot, msg, lang) {
   selectedByUser[msg.chat.id].currentOpus = null
 }
 
-module.exports.putWord = async function (bot, msg, lang) {
-  await testsServices.putWord(lang, msg, bot)
-  selectedByUser[msg.chat.id].words = null
+module.exports.putWord = async function (bot, chatId, lang) {
+  await testsServices.putWord(lang, chatId, bot)
 }
 
 module.exports.showOpus = async function (result, bot, msg, lang) {

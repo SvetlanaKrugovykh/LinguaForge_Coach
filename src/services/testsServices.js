@@ -63,23 +63,23 @@ module.exports.put1Opus = async function (part4_6, lang, msg, bot) {
   }
 }
 
-module.exports.putWord = async function (lang, msg, bot) {
+module.exports.putWord = async function (lang, chatId, bot) {
   try {
     let currentOpus
 
-    if (Array.isArray(selectedByUser[msg.chat.id]?.words)) {
-      currentOpus = selectedByUser[msg.chat.id]?.words[0]
-    } else if (Array.isArray(selectedByUser[msg.chat.id]?.words?.words)) {
-      currentOpus = selectedByUser[msg.chat.id]?.words?.words[0]
+    if (Array.isArray(selectedByUser[chatId]?.words)) {
+      currentOpus = selectedByUser[chatId]?.words[0]
+    } else if (Array.isArray(selectedByUser[chatId]?.words?.words)) {
+      currentOpus = selectedByUser[chatId]?.words?.words[0]
     }
 
     if (!currentOpus) {
       return null
     }
 
-    if (!selectedByUser[msg.chat.id]?.doWordMemorize) selectedByUser[msg.chat.id].doWordMemorize = []
+    if (!selectedByUser[chatId]?.doWordMemorize) selectedByUser[chatId].doWordMemorize = []
 
-    const index = selectedByUser[msg.chat.id].doWordMemorize.findIndex(word => {
+    const index = selectedByUser[chatId].doWordMemorize.findIndex(word => {
       if (typeof word === 'string') {
         return word === currentOpus.word
       } else {
@@ -88,12 +88,12 @@ module.exports.putWord = async function (lang, msg, bot) {
     })
 
     if (index !== -1) {
-      const removedWord = selectedByUser[msg.chat.id].doWordMemorize.splice(index, 1)[0]
-      await bot.sendMessage(msg.chat.id, `♥️: ${removedWord.word || removedWord}`)
+      const removedWord = selectedByUser[chatId].doWordMemorize.splice(index, 1)[0]
+      await bot.sendMessage(chatId, `♥️: ${removedWord.word || removedWord}`)
     }
 
     const response = await axios.post(`${process.env.SERVER_URL}/user-word-save`, {
-      query: { "userId": msg.chat.id, "part": 'w', "lang": lang, currentOpus, success: 1 }
+      query: { "userId": chatId, "part": 'w', "lang": lang, currentOpus, success: 1 }
     }, {
       headers: {
         Authorization: process.env.LG_SERVER_AUTHORIZATION

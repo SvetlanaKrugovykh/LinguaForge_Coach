@@ -1,6 +1,6 @@
 const { bot, selectedByUser } = require('../globalBuffer')
 const langS = require('./langServerServices')
-const menu = require('../modules/common_menu')
+const tests = require('./testsServices')
 
 module.exports.doWordMemorize = async function (msg) {
   if (!msg?.chat?.id) return
@@ -39,7 +39,7 @@ async function sendReminder(chatId, text) {
     ]
   }
 
-  await bot.sendMessage(chatId, '📌                          ', {
+  await bot.sendMessage(chatId, '📌 Oznacz słowo jako znane', {
     reply_markup: inlineKeyboard
   })
 }
@@ -50,8 +50,9 @@ bot.on('callback_query', async (callbackQuery) => {
 
   if (data.startsWith('mark_known_')) {
     const text = data.replace('mark_known_', '')
-    //await markWordAsKnown(chatId, text)
     console.log('Marked as known:', text)
+    //TODO: mark word as known
+    await tests.putWord(bot, chatId, 'pl')
   }
 
   await bot.answerCallbackQuery(callbackQuery.id)

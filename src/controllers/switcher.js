@@ -163,7 +163,7 @@ async function handler(bot, msg) {
       await langS.SendVoiceOutOpus(bot, msg, lang)
       break
     case '5_33':
-      await tests.putWord(bot, msg, lang)
+      await tests.putWord(bot, chatId, lang)
       break
     case '5_34':
       await mem.doWordMemorize(msg)
