@@ -63,14 +63,19 @@ module.exports.put1Opus = async function (part4_6, lang, msg, bot) {
   }
 }
 
-module.exports.putWord = async function (lang, chatId, bot) {
+module.exports.putWordS = async function (bot, chatId, lang) {
   try {
-    let currentOpus
+    let currentOpus = {}
 
     if (Array.isArray(selectedByUser[chatId]?.words)) {
       currentOpus = selectedByUser[chatId]?.words[0]
     } else if (Array.isArray(selectedByUser[chatId]?.words?.words)) {
       currentOpus = selectedByUser[chatId]?.words?.words[0]
+    }
+
+    if (selectedByUser[chatId].pinWordToKnown) {
+      currentOpus.word = selectedByUser[chatId].pinWordToKnown
+      selectedByUser[chatId].pinWordToKnown = null
     }
 
     if (!currentOpus) {
@@ -89,7 +94,7 @@ module.exports.putWord = async function (lang, chatId, bot) {
 
     if (index !== -1) {
       const removedWord = selectedByUser[chatId].doWordMemorize.splice(index, 1)[0]
-      await bot.sendMessage(chatId, `♥️: ${removedWord.word || removedWord}`)
+      await bot.sendMessage(chatId, `♥️: ${removedWord || removedWord?.word || currentOpus?.word}`)
     }
 
     const response = await axios.post(`${process.env.SERVER_URL}/user-word-save`, {

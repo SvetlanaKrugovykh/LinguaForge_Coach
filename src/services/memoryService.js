@@ -50,9 +50,8 @@ bot.on('callback_query', async (callbackQuery) => {
 
   if (data.startsWith('mark_known_')) {
     const text = data.replace('mark_known_', '')
-    console.log('Marked as known:', text)
-    //TODO: mark word as known
-    await tests.putWord(bot, chatId, 'pl')
+    selectedByUser[chatId].pinWordToKnown = text.replace('mark_known_', '')
+    await tests.putWordS(bot, chatId, 'pl')
   }
 
   await bot.answerCallbackQuery(callbackQuery.id)

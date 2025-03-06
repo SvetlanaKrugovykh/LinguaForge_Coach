@@ -64,7 +64,7 @@ module.exports.putOpus = async function (bot, msg, lang) {
 }
 
 module.exports.putWord = async function (bot, chatId, lang) {
-  await testsServices.putWord(lang, chatId, bot)
+  await testsServices.putWordS(bot, chatId, lang)
 }
 
 module.exports.showOpus = async function (result, bot, msg, lang) {
