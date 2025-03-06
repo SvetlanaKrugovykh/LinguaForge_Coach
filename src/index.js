@@ -67,7 +67,7 @@ bot.on('polling_error', (error) => {
   }
 })
 
-cron.schedule('0 * * * *', () => {
+cron.schedule('0 9-22 * * *', () => {
   mem.checkAndSendReminders()
 })
 
