@@ -67,8 +67,11 @@ bot.on('polling_error', (error) => {
   }
 })
 
-cron.schedule('0 9-22 * * *', () => {
-  mem.checkAndSendReminders()
+cron.schedule('0 * * * *', () => {
+  const currentHour = new Date().getHours()
+  if (currentHour >= 9 && currentHour < 22) {
+    mem.checkAndSendReminders()
+  }
 })
 
 module.exports = { bot }
