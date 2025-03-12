@@ -41,6 +41,9 @@ bot.on('text', async (msg) => {
   if (msg.text.includes('❔')) {
     await testS.evaluateTest(msg, bot, lang)
   }
+  if (msg.text.includes('🔎')) {
+    await testS.gotFormattedTask(bot, msg, lang)
+  }
 })
 
 bot.on('callback_query', async (callbackQuery) => {

@@ -5,6 +5,7 @@ const userM = require('./userMemorizeService')
 const { selectedByUser } = require('../globalBuffer')
 const { sendTgMsg } = require('./commonService')
 const testM = require('../modules/tests_menu')
+const cHTML = require('../services/creatorHTML')
 
 module.exports.get1Test = async function (part1_3, lang, msg, bot) {
 
@@ -228,4 +229,14 @@ module.exports.saveUserAnswerData = async function (msg, bot, lang, choiceText) 
   } else {
     selectedByUser[msg.chat.id].answerSet.push(choiceText)
   }
+}
+
+module.exports.gotFormattedTask = async function (bot, msg, lang) {
+  const chatId = msg.chat.id
+  const currentTest = selectedByUser[chatId].currentTest
+  if (!currentTest) {
+    await bot.sendMessage(chatId, `${t_txt[lang]['0_14']}`, { parse_mode: 'HTML' })
+    return
+  }
+  cHTML.createHtml(bot, chatId, lang)
 }

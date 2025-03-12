@@ -158,6 +158,7 @@ async function executeResult(result, bot, msg, lang) {
       keyboard.push(row)
     })
 
+    keyboard.push([{ text: `${t_txt[lang]['0_3_0']}` }])
     keyboard.push([{ text: `${t_txt[lang]['0_3']}` }])
     keyboard.push([{ text: `${t_txt[lang]['0_2']}` }])
 
