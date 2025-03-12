@@ -86,3 +86,17 @@ module.exports.SendVoiceOutOpus = async function (bot, msg, lang) {
   module.exports.getVoiceFromTxt(text, lang, msg, bot)
 
 }
+
+module.exports.SendVoiceOutTest = async function (bot, msg, lang) {
+  const currentTest = selectedByUser[msg.chat.id]?.currentTest
+  if (!currentTest || !Object.entries(currentTest).length) {
+    return null
+  }
+  const text = currentTest?.text + ' ' + currentTest?.options
+  if (!text || text === '') {
+    await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_10']}`, { parse_mode: "HTML" })
+    return
+  }
+  module.exports.getVoiceFromTxt(text, lang, msg, bot)
+
+}

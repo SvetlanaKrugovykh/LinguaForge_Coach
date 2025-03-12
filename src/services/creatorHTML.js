@@ -2,6 +2,7 @@ const { selectedByUser } = require('../globalBuffer')
 const fs = require('fs')
 const util = require('util')
 const moment = require('moment')
+const fT = require('../utils/formattedTexts')
 
 module.exports.createHtml = async function (bot, chatId, lang) {
   try {
@@ -12,6 +13,7 @@ module.exports.createHtml = async function (bot, chatId, lang) {
     }
 
     const HTML_CATALOG = process.env.TEMP_DOWNLOADS_CATALOG
+    const filePath = `${HTML_CATALOG}${chatId}.html`
     const content = []
 
     moment.updateLocale(lang, {
@@ -25,25 +27,48 @@ module.exports.createHtml = async function (bot, chatId, lang) {
       { text: `${currentTest?.topic || 'test'}`, style: 'header', fontSize: '18px' },
     )
 
-    content.push({
-      text: currentTest.text,
-      style: 'defaultStyle',
-      fontSize: '14px'
-    })
+    const { formattedText, formattedOptions } = fT.formatTextAndOptions(currentTest.text, currentTest.options)
 
     content.push({
-      text: currentTest.options,
+      text: formattedText,
       style: 'defaultStyle',
-      fontSize: '14px'
+      fontSize: '16px',
+      marginLeft: '20px'
+    })
+
+    const formattedOptionsHTML = formatOptionsHTML(formattedOptions)
+    content.push({
+      text: formattedOptionsHTML,
+      style: 'defaultStyle',
+      fontSize: '16px'
     })
 
     const htmlContent = createHtmlContent(content)
-    await writeHtmlToFile(htmlContent, `${HTML_CATALOG}${chatId}.html`)
+    await writeHtmlToFile(htmlContent, filePath)
+    await bot.sendDocument(chatId, filePath)
+    fs.unlink(filePath, () => console.log(`File ${filePath} deleted`))
+
     return true
   } catch (error) {
     console.error('Error in function createHtml:', error)
     return null
   }
+}
+
+function formatOptionsHTML(options) {
+  const questionRegex = /\d+\.\s/g
+  const questions = options.split(questionRegex).filter(Boolean)
+  const questionNumbers = options.match(questionRegex) || []
+
+  let formattedOptions = ''
+  questions.forEach((question, index) => {
+    formattedOptions += `<p style="margin-left: 20px;"><span style="color: blue;">${questionNumbers[index] || `${index + 1}.`}</span> ${question.trim()}</p>`
+  })
+
+  const optionRegex = /([a-z]\)\s)/g
+  formattedOptions = formattedOptions.replace(optionRegex, match => `<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: green;">${match}</span>`)
+
+  return formattedOptions
 }
 
 function createHtmlContent(content) {
@@ -62,7 +87,7 @@ function createHtmlContent(content) {
     if (item.style === 'header') {
       htmlContent += `<h1>${item.text}</h1>`
     } else {
-      htmlContent += `<p>${item.text}</p>`
+      htmlContent += `<p style="margin-left: ${item.marginLeft || '0px'}; font-size: ${item.fontSize};">${item.text}</p>`
     }
   }
 

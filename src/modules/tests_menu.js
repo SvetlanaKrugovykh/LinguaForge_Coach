@@ -2,6 +2,7 @@ const { testsMenu, t_txt } = require('../data/tests_keyboard')
 const { selectedByUser } = require('../globalBuffer')
 const testsServices = require('../services/testsServices')
 const { sendTgMsg } = require('../services/commonService')
+const fT = require('../utils/formattedTexts')
 
 module.exports.OptionsParts1_3 = async function (bot, msg, lang) {
   await bot.sendMessage(msg.chat.id, testsMenu["level1_3"].title[lang], {
@@ -111,43 +112,11 @@ async function executeResult(result, bot, msg, lang) {
       return
     }
 
-    let optionsWithPrawdaFalsz
-    if (result?.options) {
-      optionsWithPrawdaFalsz = result.options.replace(/prawda\/fałsz/g, 'a) prawda b) fałsz')
-    } else {
-      optionsWithPrawdaFalsz = 'a) b) c)'
-    }
-
-    const options = optionsWithPrawdaFalsz.split(/(?=\s[a-z]\))/).map(option => `<b>${option.trim()}</b>`).join('\n').replace('a)', '\na)')
-    const formattedText = result.text.replace(/(\d{1,3}\.)/g, '\n\n$1')
-
-    const updatedOptions = options.replace(/(\d{1,3}\.)/g, '\n\n$1')
-    const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${updatedOptions}`
+    const { formattedText, formattedOptions } = fT.formatTextAndOptions(result.text, result.options)
+    const question = `${t_txt[lang]['0_0']}${formattedText}\n\n${t_txt[lang]['0_1']}${formattedOptions}`
     await sendTgMsg(bot, chatId, question)
 
-    const numberMatchesText = formattedText.match(/\d{1,3}\./g)
-    const numberMatchesOptions = updatedOptions.match(/\d{1,3}\./g)
-    const numberMatches = [...new Set([...(numberMatchesText || []), ...(numberMatchesOptions || [])])]
-    let numbers = numberMatches.map(num => num.trim().replace('.', '')).sort((a, b) => a - b)
-
-    const letterMatchesText = formattedText.match(/[a-z]\)/g)
-    const letterMatchesOptions = updatedOptions.match(/[a-z]\)/g)
-    const letterMatches = [...new Set([...(letterMatchesText || []), ...(letterMatchesOptions || [])])]
-    let letters = letterMatches.map(letter => letter[0]).sort()
-
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
-    letters = alphabet.filter(letter => {
-      const lastLetter = letters[letters.length - 1]
-      return letter <= lastLetter && !letters.includes(letter)
-    }).concat(letters)
-
-    if (numbers.length === 0 && letters.length > 0) {
-      numbers = ['1']
-    }
-
-    if (letters.length === 0 && numbers.length > 0) {
-      letters = ['a', 'b', 'c']
-    }
+    const { numbers, letters } = fT.extractNumbersAndLetters(formattedText, formattedOptions)
 
     const keyboard = []
     numbers.forEach(num => {
@@ -158,8 +127,9 @@ async function executeResult(result, bot, msg, lang) {
       keyboard.push(row)
     })
 
-    keyboard.push([{ text: `${t_txt[lang]['0_3_0']}` }])
     keyboard.push([{ text: `${t_txt[lang]['0_3']}` }])
+    keyboard.push([{ text: `${t_txt[lang]['0_3_0']}` }])
+    if (selectedByUser[chatId]?.OptionsParts1_3 !== '1') keyboard.push([{ text: `${t_txt[lang]['0_3_1']}` }])
     keyboard.push([{ text: `${t_txt[lang]['0_2']}` }])
 
     await bot.sendMessage(chatId, `${t_txt[lang]['0_4']}`, {

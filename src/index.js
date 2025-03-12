@@ -3,6 +3,7 @@ const { isThisGroupId } = require('./modules/bot')
 const { bot } = require('./globalBuffer')
 const menu = require('./modules/common_menu')
 const testS = require('./services/testsServices')
+const langS = require('./services/langServerServices')
 const { globalBuffer } = require('./globalBuffer')
 const getU = require('./services/userGetterServices')
 const cron = require('node-cron')
@@ -43,6 +44,9 @@ bot.on('text', async (msg) => {
   }
   if (msg.text.includes('🔎')) {
     await testS.gotFormattedTask(bot, msg, lang)
+  }
+  if (msg.text.includes('📞')) {
+    await langS.SendVoiceOutTest(bot, msg, lang)
   }
 })
 
