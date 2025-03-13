@@ -29,7 +29,7 @@ module.exports.createHtml = async function (bot, chatId, lang) {
     const formattedTextHTML = formatTextHTML(formattedText)
     content.push({ text: formattedTextHTML })
 
-    const formattedOptionsHTML = formatOptionsHTML(formattedOptions)
+    const formattedOptionsHTML = formatOptionsHTML(formattedText, formattedOptions)
     content.push({ html: formattedOptionsHTML })
 
     const htmlContent = createHtmlContent(content)
@@ -53,23 +53,26 @@ function formatTextHTML(text) {
   return formattedText
 }
 
-function formatOptionsHTML(options) {
-  const questionRegex = /\d+\.\s/g
-  const questions = options.split(questionRegex).filter(Boolean)
-  const questionNumbers = options.match(questionRegex) || []
+function formatOptionsHTML(formattedText, options) {
+  try {
+    const { numbers } = fT.extractNumbersAndLetters(formattedText, options)
 
-  let formattedOptions = ''
+    let formattedOptions = ''
+    const questionsAndAnswers = options.split('<br><b><br>')
 
-  questions.forEach((question, index) => {
-    formattedOptions += `<p style="margin-left: 20px; font-size: 16px; font-weight: normal;">
-      ${questionNumbers[index] || `${index + 1}.`}</><br>${question.trim()}
-    </p>`
-  })
+    questionsAndAnswers.forEach((question, index) => {
+      if (question.trim() === '') return
+      formattedOptions += `<p style="margin-left: 20px; font-size: 16px; font-weight: normal;">
+      <span style="color: blue;">${numbers[index]}.</span><br><b>${question}</b></p>`
+    })
 
-  return formattedOptions.replace(/([a-z]\)\s)/g, match =>
-    `<span style="color: blue;">${match}</span>`
-  )
+    return formattedOptions
+  } catch (error) {
+    console.error('Error in formatOptionsHTML:', error)
+    return null
+  }
 }
+
 
 
 function createHtmlContent(content) {
