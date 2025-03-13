@@ -27,7 +27,9 @@ module.exports.createHtml = async function (bot, chatId, lang) {
       { text: `${currentTest?.topic || 'test'}`, style: 'header', fontSize: '18px' },
     )
 
-    const { formattedText, formattedOptions } = fT.formatTextAndOptions(currentTest.text, currentTest.options)
+    let { formattedText, formattedOptions } = fT.formatTextAndOptions(currentTest.text, currentTest.options)
+    // formattedText = formattedText.replace(/\n/g, '<br>')
+    formattedOptions = formattedOptions.replace(/\n/g, '<br>')
 
     content.push({
       text: formattedText,
