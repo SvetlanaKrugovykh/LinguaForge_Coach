@@ -129,8 +129,8 @@ async function executeResult(result, bot, msg, lang) {
 
     keyboard.push([{ text: `${t_txt[lang]['0_3']}` }])
     keyboard.push([{ text: `${t_txt[lang]['0_3_0']}` }])
-    if (selectedByUser[chatId]?.OptionsParts1_3 !== '1') keyboard.push([{ text: `${t_txt[lang]['0_3_1']}` }])
     keyboard.push([{ text: `${t_txt[lang]['0_2']}` }])
+    if (selectedByUser[chatId]?.OptionsParts1_3 !== '1') keyboard.push([{ text: `${t_txt[lang]['0_3_1']}` }])
 
     await bot.sendMessage(chatId, `${t_txt[lang]['0_4']}`, {
       reply_markup: {

@@ -63,21 +63,25 @@ function formatOptionsHTML(formattedText, options) {
     questionsAndAnswers.forEach((question, index) => {
       if (question.trim() === '') return
       question = question.replace(/([a-c])\)/g, (p1) => {
-        return `<span style="color: green; font-weight: bold;">${p1}</span>`
+        return `<span style="color: blue;">${p1}</span>`
       })
 
       formattedOptions += `<p style="margin-left: 20px; font-size: 16px; font-weight: normal;">
         <span style="color: blue;">${numbers[index - 1]}.</span><br><b>${question}</b></p>`
     })
 
-    return formattedOptions.replace('undefined.', '')
+    const questionRegex = /(\d{1,3}\.\s)/g
+    const abcRegex = /([a-z]\))/g
+    formattedOptions = formattedOptions.replace(questionRegex, match => `<span style="font-weight: bold; color: green;">${match}</span>`)
+    formattedOptions = formattedOptions.replace(abcRegex, match => `<span style="font-weight: bold; color: blue;">${match}</span>`)
+    formattedOptions = formattedOptions.replace('undefined.', '')
+
+    return formattedOptions
   } catch (error) {
     console.error('Error in formatOptionsHTML:', error)
     return null
   }
 }
-
-
 
 
 function createHtmlContent(content) {
