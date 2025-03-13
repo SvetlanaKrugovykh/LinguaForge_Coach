@@ -58,20 +58,25 @@ function formatOptionsHTML(formattedText, options) {
     const { numbers } = fT.extractNumbersAndLetters(formattedText, options)
 
     let formattedOptions = ''
-    const questionsAndAnswers = options.split('<br><b><br>')
+    const questionsAndAnswers = options.split('\n').filter(Boolean)
 
     questionsAndAnswers.forEach((question, index) => {
       if (question.trim() === '') return
+      question = question.replace(/([a-c])\)/g, (p1) => {
+        return `<span style="color: green; font-weight: bold;">${p1}</span>`
+      })
+
       formattedOptions += `<p style="margin-left: 20px; font-size: 16px; font-weight: normal;">
-      <span style="color: blue;">${numbers[index]}.</span><br><b>${question}</b></p>`
+        <span style="color: blue;">${numbers[index - 1]}.</span><br><b>${question}</b></p>`
     })
 
-    return formattedOptions
+    return formattedOptions.replace('undefined.', '')
   } catch (error) {
     console.error('Error in formatOptionsHTML:', error)
     return null
   }
 }
+
 
 
 
