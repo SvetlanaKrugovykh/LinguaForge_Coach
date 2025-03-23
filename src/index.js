@@ -8,7 +8,25 @@ const { globalBuffer } = require('./globalBuffer')
 const getU = require('./services/userGetterServices')
 const cron = require('node-cron')
 const mem = require('./services/memoryService')
+const fs = require('fs')
+const path = require('path')
+require('dotenv').config()
 
+
+const tempDownloadsCatalog = process.env.TEMP_DOWNLOADS_CATALOG
+const tempCatalog = process.env.TEMP_CATALOG
+
+if (tempDownloadsCatalog) {
+  fs.promises.mkdir(tempDownloadsCatalog, { recursive: true })
+    .then(() => console.log(`Directory created or already exists: ${tempDownloadsCatalog}`))
+    .catch(err => console.error(`Failed to create directory: ${tempDownloadsCatalog}`, err))
+}
+
+if (tempCatalog) {
+  fs.promises.mkdir(tempCatalog, { recursive: true })
+    .then(() => console.log(`Directory created or already exists: ${tempCatalog}`))
+    .catch(err => console.error(`Failed to create directory: ${tempCatalog}`, err))
+}
 
 bot.on('message', async (msg) => {
 
@@ -73,6 +91,7 @@ bot.on('polling_error', (error) => {
       .catch(err => console.error('Failed to restart polling:', err))
   }
 })
+
 
 cron.schedule('0 * * * *', () => {
   const currentHour = new Date().getHours()
