@@ -4,6 +4,7 @@ const menu = require('../modules/common_menu')
 const tests = require('../modules/tests_menu')
 const { textInput } = require('../modules/common_functions')
 const langS = require('../services/langServerServices')
+const { payNow } = require('../controllers/payments')
 const { globalBuffer, selectedByUser } = require('../globalBuffer')
 const { pinNativeLanguage } = require('../services/userSetterService')
 const { getFromUserFile } = require('../services/userGetterServices')
@@ -116,7 +117,7 @@ async function handler(bot, msg) {
       break
     case '1_1':
       selectedByUser[chatId].changed = false
-      await menu.downloadPDF(bot, msg, lang)
+      await menu.downloadPDF(bot, msg, lang, 'pl')
       break
     case '1_2':
       selectedByUser[chatId].changed = false
@@ -173,6 +174,12 @@ async function handler(bot, msg) {
     case '9_3':
     case '9_4':
       pinNativeLanguage(data, msg)
+      break
+    case 'pay_now':
+      await payNow(bot, msg, lang)
+      break
+    case 'download_info':
+      await menu.downloadPDF(bot, msg, lang, 'regulamin')
       break
     default:
       await menu.commonStartMenu(bot, msg, true)

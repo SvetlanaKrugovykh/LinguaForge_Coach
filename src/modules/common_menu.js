@@ -14,10 +14,11 @@ const translateS = require('../services/translateService')
 module.exports.commonStartMenu = async function (bot, msg) {
   console.log(`/start at ${new Date()} tg_user_id: ${msg.chat.id}`)
   const adminUser = users.find(user => user.id === msg.chat.id)
-  if (selectedByUser[msg.chat.id] === undefined) await userSettings(msg)
   if (adminUser) {
+    // await checkAdminUser(adminUser) //TODO: checkAdminUser
     await menuStarter(bot, msg, buttonsConfig["starterButtons"])
   } else {
+    await module.exports.userMenu(bot, msg)
     await blockMenu(bot, msg)
   }
 }
@@ -26,6 +27,15 @@ module.exports.settingsMenu = async function (bot, msg, lang = 'en') {
   await bot.sendMessage(msg.chat.id, buttonsConfig["settingsButtons"].title[lang], {
     reply_markup: {
       keyboard: buttonsConfig["settingsButtons"].buttons[lang],
+      resize_keyboard: true
+    }
+  })
+}
+
+module.exports.userMenu = async function (bot, msg, lang = 'pl') {
+  await bot.sendMessage(msg.chat.id, buttonsConfig["userMenu"].title[lang], {
+    reply_markup: {
+      keyboard: buttonsConfig["userMenu"].buttons[lang],
       resize_keyboard: true
     }
   })
@@ -179,9 +189,9 @@ async function downloadFile(bot, fileId, dest) {
   })
 }
 
-module.exports.downloadPDF = async function (bot, msg, lang = 'pl') {
+module.exports.downloadPDF = async function (bot, msg, lang = 'pl', fileN) {
   try {
-    const filePath = path.join(__dirname, '../../assets/pdf', `${lang}.pdf`)
+    const filePath = path.join(__dirname, '../../assets/pdf', `${fileN}.pdf`)
     await bot.sendDocument(msg.chat.id, filePath, {}, {
       filename: `${lang}.pdf`,
       contentType: 'application/pdf'

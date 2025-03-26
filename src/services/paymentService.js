@@ -1,29 +1,30 @@
 const axios = require('axios')
+const { text } = require('../data/keyboard')
+require('dotenv').config()
 
-module.exports.formPaymentLink = async function (bot, chatId, abbreviation, contract, amount) {
+module.exports.formPaymentLink = async function (bot, chatId, amount, lang = 'pl') {
 
   const formPayLinkURL = process.env.FORM_PAY_LINK_URL
 
   try {
     const response = await axios.post(formPayLinkURL, {
-      abbreviation,
-      'payment_code': contract.payment_code,
+      abbreviation: process.env.ABBREVIATION,
+      'payment_code': `${process.env.CONTRACT}_${chatId}`,
       amount
     })
 
     if (response.status === 200) {
       const currency = 'UAH'
-      const description = `TelegramID: ${contract.payment_code}. TOTAL: ${amount} грн.`
-      // const payment = await dbRequests.createPayment(contract.id, contract.organization_id, amount, currency, description, `order_${Date.now()}`)
-      console.log(payment)
-      return response.data
+      const description = `TelegramID: ${process.env.CONTRACT}_${chatId}. TOTAL: ${amount}.`
+      //TODO save payment link to the database
+      return true
     } else {
-      await bot.sendMessage(chatId, '⛔️ Wystąpił błąd podczas tworzenia łącza do LiqPay.', { parse_mode: "HTML" })
+      await bot.sendMessage(chatId, text[lang]['0_21'], { parse_mode: "HTML" })
       console.error('Error sending message to the Telegram group:',
         response.statusText)
     }
   } catch (error) {
-    await bot.sendMessage(chatId, '⛔️ Wystąpił błąd podczas tworzenia łącza do LiqPay.', { parse_mode: "HTML" })
+    await bot.sendMessage(chatId, text[lang]['0_21'], { parse_mode: "HTML" })
     console.error('Error sending message to the Telegram group:', error.message)
   }
 }
