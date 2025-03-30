@@ -7,7 +7,7 @@ const { buttonsConfig, texts } = require('../data/keyboard')
 const { testsMenu } = require('../data/tests_keyboard')
 const { users } = require('../users/users.model')
 const { selectedByUser } = require('../globalBuffer')
-const { userSettings } = require('../controllers/userSettings')
+const { checkUserPermissions } = require('../services/checkUsers')
 const langS = require('../services/langServerServices')
 const translateS = require('../services/translateService')
 
@@ -15,11 +15,15 @@ module.exports.commonStartMenu = async function (bot, msg) {
   console.log(`/start at ${new Date()} tg_user_id: ${msg.chat.id}`)
   const adminUser = users.find(user => user.id === msg.chat.id)
   if (adminUser) {
-    // await checkAdminUser(adminUser) //TODO: checkAdminUser
     await menuStarter(bot, msg, buttonsConfig["starterButtons"])
   } else {
-    await module.exports.userMenu(bot, msg)
-    await blockMenu(bot, msg)
+    const permissionAccepted = await checkUserPermissions(bot, msg)
+    if (permissionAccepted) {
+      await menuStarter(bot, msg, buttonsConfig["starterButtons"])
+    } else {
+      await module.exports.userMenu(bot, msg)
+      await blockMenu(bot, msg)
+    }
   }
 }
 
@@ -155,7 +159,7 @@ module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = tr
 }
 
 
-async function blockMenu(bot, msg, lang = "en") {
+async function blockMenu(bot, msg, lang = "pl") {
   await bot.sendMessage(msg.chat.id, texts[lang]['block'], {})
 }
 
