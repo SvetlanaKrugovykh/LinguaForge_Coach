@@ -14,4 +14,26 @@ const selectedByUser = {}
 
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true })
 
-module.exports = { bot, globalBuffer, selectedByUser }
+
+const liqpayKeys = {
+  lev: {
+    publicKey: process.env.LIQPAY_PUBLIC_KEY_LEV,
+    privateKey: process.env.LIQPAY_PRIVATE_KEY_LEV,
+  }
+}
+
+const testLiqpayKeys = {
+  lev: {
+    publicKey: process.env.TEST_LIQPAY_PUBLIC_KEY_LEV,
+    privateKey: process.env.TEST_LIQPAY_PRIVATE_KEY_LEV,
+  }
+}
+
+function getLiqpayKeys(abbreviation) {
+  if (process.env.LIQPAY_ENV === 'Test') {
+    return testLiqpayKeys[abbreviation] || null
+  }
+  return liqpayKeys[abbreviation] || null
+}
+
+module.exports = { bot, globalBuffer, selectedByUser, getLiqpayKeys }

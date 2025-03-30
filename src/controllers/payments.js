@@ -35,10 +35,9 @@ module.exports.payNow = async function (bot, msg, lang = 'pl') {
 
     console.log(totalAmount)
     let paymentLink = await formPaymentLink(bot, chatId, totalAmount, lang)
-    const urlLink = paymentLink?.message?.paymentLink || null
 
-    if (urlLink) {
-      const markdownLink = `[${texts[lang]['0_20']}](${urlLink})`
+    if (paymentLink) {
+      const markdownLink = `[${texts[lang]['0_20']}](${paymentLink})`
       bot.sendMessage(chatId, markdownLink, { parse_mode: 'Markdown' })
     }
 
