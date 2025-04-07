@@ -10,6 +10,8 @@ const { pinNativeLanguage } = require('../services/userSetterService')
 const { getFromUserFile } = require('../services/userGetterServices')
 const evS = require('../services/evaluationService')
 const mem = require('../services/memoryService')
+const dsa = require('../services/textAnalyze')
+
 require('dotenv').config()
 
 function getCallbackData(text) {
@@ -168,6 +170,9 @@ async function handler(bot, msg) {
       break
     case '5_34':
       await mem.doWordMemorize(msg)
+      break
+    case '7_0':
+      await dsa.deepSeekAnylize(bot, msg, lang)
       break
     case '9_1':
     case '9_2':
