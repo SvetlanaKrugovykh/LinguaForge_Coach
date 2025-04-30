@@ -194,7 +194,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
     const discrepancies = Object.keys(correctMap).filter(question => {
       const userAnswer = answers.find(answer => answer.startsWith(question))
       if (!userAnswer) return true
-      const [, userOption] = userAnswer.split('↔')
+      const [, userOption] = userAnswer.split('▫')
       return correctMap[question] !== userOption
     })
 
@@ -205,7 +205,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
       await bot.sendMessage(msg.chat.id, `${t_txt[lang]['0_6']}`, { parse_mode: 'HTML' })
       const discrepancyMessage = discrepancies.map(question => {
         const userAnswer = answers.find(answer => answer.startsWith(question))
-        const userOption = userAnswer ? userAnswer.split('↔')[1] : '⁉️'
+        const userOption = userAnswer ? userAnswer.split('▫')[1] : '⁉️'
         const explanation = explanations[question] ? `\n${t_txt[lang]['0_15']} ${explanations[question]}` : ''
         return `${t_txt[lang]['0_7']} ${question}: ${t_txt[lang]['0_8']} ${userOption}, ${t_txt[lang]['0_9']} ${correctMap[question]}${explanation}`
       }).join('\n\n')
@@ -221,7 +221,7 @@ module.exports.compareUserAnswer = async function (msg, bot, lang) {
 module.exports.saveUserAnswerData = async function (msg, bot, lang, choiceText) {
   if (!selectedByUser[msg.chat.id].answerSet) selectedByUser[msg.chat.id].answerSet = []
 
-  const [questionNumber] = choiceText.split('↔')
+  const [questionNumber] = choiceText.split('▫')
   const existingIndex = selectedByUser[msg.chat.id].answerSet.findIndex(answer => answer.startsWith(questionNumber))
 
   if (existingIndex !== -1) {
