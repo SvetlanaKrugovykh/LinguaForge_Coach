@@ -3,6 +3,7 @@ const { inputLineScene, inputLineAdminScene } = require('../controllers/inputLin
 const { buttonsConfig } = require('../data/keyboard')
 const GROUP_ID = Number(process.env.GROUP_ID)
 const { globalBuffer, selectedByUser } = require('../globalBuffer')
+require('dotenv').config()
 
 async function actionsOnId(bot, msg, inputLine) {
   if (inputLine !== undefined) {
@@ -33,15 +34,21 @@ module.exports.menuStarter = async function (bot, msg, lang = 'pl') {
 module.exports.sendstarterButtons = async function (bot, msg) {
   const { title, buttons } = buttonsConfig["starterButtons"]
   const lang = selectedByUser[msg.chat.id]?.language || 'pl'
+  const adminIds = process.env.ADMINS.split(',').map(id => id.trim())
+  const userButtons = [...buttons[lang]]
+
+  if (adminIds.includes(String(msg.chat.id))) {
+    userButtons.push([{ text: '✍ for Reply on demand', callback_data: '0_99' }])
+  }
   await bot.sendMessage(msg.chat.id, title[lang], {
     reply_markup: {
-      keyboard: buttons[lang],
+      keyboard: userButtons,
       resize_keyboard: true
     }
   })
+
 }
 
-//#region clientAdminSubMenus
 module.exports.clientsAdminResponseToRequest = async function (bot, msg) {
   await bot.sendMessage(msg.chat.id, 'Введіть <i>id чата для відправки відповіді клієнту </i>\n', { parse_mode: 'HTML' })
   const codeChat = await inputLineScene(bot, msg)
@@ -60,5 +67,4 @@ module.exports.clientsAdminResponseToRequest = async function (bot, msg) {
   await actionsOnId(bot, msg, txtCommandForSend)
 }
 
-//#endregion
 

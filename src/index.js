@@ -8,6 +8,7 @@ const { globalBuffer } = require('./globalBuffer')
 const getU = require('./services/userGetterServices')
 const cron = require('node-cron')
 const mem = require('./services/memoryService')
+const { handleAdminResponse } = require('./modules/adminMessageHandler')
 const fs = require('fs')
 const path = require('path')
 require('dotenv').config()
@@ -47,6 +48,10 @@ bot.on('text', async (msg) => {
 
   if (msg.text.includes('▫')) {
     await testS.saveUserAnswerData(msg, bot, lang, msg.text)
+    return
+  }
+  if (msg.text.includes('✍')) {
+    await handleAdminResponse(bot, msg)
     return
   }
   if (msg.text.includes('📦')) {
