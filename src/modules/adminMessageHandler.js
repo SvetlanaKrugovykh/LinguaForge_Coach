@@ -11,7 +11,10 @@ module.exports.handleAdminResponse = async function (bot, adminMsg) {
 
     const clientIds = Object.keys(globalBuffer.msgQueue).slice(0, 10)
     const buttons = clientIds.map(chatId => [
-      { text: `Client ID: ${chatId} (${globalBuffer.msgQueue[chatId].length} messages)`, callback_data: `select_client_${chatId}` }
+      {
+        text: `Client ID: ${chatId} (${globalBuffer.msgQueue[chatId].length} msgs) - ${globalBuffer.msgQueue[chatId][0]?.content || 'No content'}`,
+        callback_data: `select_client_${chatId}`
+      }
     ])
 
     await bot.sendMessage(adminId, 'Select a client to respond to:', {
