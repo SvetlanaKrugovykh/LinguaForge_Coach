@@ -83,8 +83,8 @@ module.exports.chooseNativeLanguageMenu = async function (bot, msg, lang = "en")
   })
 }
 
-module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = true, voice = false) {
-  const GROUP_ID = process.env.GROUP_ID
+module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = true, voice = false, toChatID = null) {
+  const GROUP_ID = toChatID || process.env.GROUP_ID
   try {
     const chatId = msg.chat.id
     await bot.sendMessage(chatId, `<i>${texts[lang]['0_2']}\n</i>`, { parse_mode: "HTML" })
@@ -129,29 +129,31 @@ module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = tr
     })
 
     for (const message of collectedMessages) {
-      if (!globalBuffer.msgQueue) globalBuffer.msgQueue = {}
-      if (!globalBuffer.msgQueue[msg.chat.id]) globalBuffer.msgQueue[msg.chat.id] = []
+      if (!toChatID) {
+        if (!globalBuffer.msgQueue) globalBuffer.msgQueue = {}
+        if (!globalBuffer.msgQueue[msg.chat.id]) globalBuffer.msgQueue[msg.chat.id] = []
+      }
 
       if (message.type === 'text') {
-        globalBuffer.msgQueue[msg.chat.id].push({ type: 'text', content: message.content })
+        if (!toChatID) globalBuffer.msgQueue[msg.chat.id].push({ type: 'text', content: message.content })
         if (toSend) await bot.sendMessage(GROUP_ID, `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):\n${message.content}`, { parse_mode: "HTML" })
       } else {
         if (toSend) await bot.sendMessage(GROUP_ID, `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):`, { parse_mode: "HTML" })
         if (message.type === 'photo') {
-          globalBuffer.msgQueue[msg.chat.id].push({ type: 'photo', fileId: message.fileId })
+          if (!toChatID) globalBuffer.msgQueue[msg.chat.id].push({ type: 'photo', fileId: message.fileId })
           await bot.sendPhoto(GROUP_ID, message.fileId)
         } else if (message.type === 'document') {
-          globalBuffer.msgQueue[msg.chat.id].push({ type: 'document', fileId: message.fileId })
+          if (!toChatID) globalBuffer.msgQueue[msg.chat.id].push({ type: 'document', fileId: message.fileId })
           await bot.sendDocument(GROUP_ID, message.fileId)
         } else if (message.type === 'audio') {
-          globalBuffer.msgQueue[msg.chat.id].push({ type: 'audio', fileId: message.fileId })
+          if (!toChatID) globalBuffer.msgQueue[msg.chat.id].push({ type: 'audio', fileId: message.fileId })
           await bot.sendAudio(GROUP_ID, message.fileId)
         } else if (message.type === 'voice') {
           const dirPath = process.env.TEMP_DOWNLOADS_CATALOG
           fs.mkdirSync(dirPath, { recursive: true })
           const filePath = path.join(dirPath, `${message.fileId}.ogg`)
           await downloadFile(bot, message.fileId, filePath)
-          globalBuffer.msgQueue[msg.chat.id].push({ type: 'voice', filePath })
+          if (!toChatID) globalBuffer.msgQueue[msg.chat.id].push({ type: 'voice', filePath })
           return filePath
         }
       }
