@@ -135,10 +135,29 @@ module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = tr
       }
 
       if (message.type === 'text') {
-        if (!toChatID) globalBuffer.msgQueue[msg.chat.id].push({ type: 'text', content: message.content })
-        if (toSend) await bot.sendMessage(GROUP_ID, `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):\n${message.content}`, { parse_mode: "HTML" })
+        if (!toChatID) {
+          globalBuffer.msgQueue[msg.chat.id].push({ type: 'text', content: message.content })
+          if (toSend) {
+            await bot.sendMessage(
+              GROUP_ID,
+              `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):\n${message.content}`,
+              { parse_mode: "HTML" }
+            )
+          }
+        } else {
+          await bot.sendMessage(
+            GROUP_ID,
+            `Reply from admin group:\n${message.content}`,
+            { parse_mode: "HTML" }
+          )
+        }
       } else {
-        if (toSend) await bot.sendMessage(GROUP_ID, `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):`, { parse_mode: "HTML" })
+        if (toSend) {
+          const header = !toChatID
+            ? `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):`
+            : `Reply from admin group:\n`
+          await bot.sendMessage(GROUP_ID, header, { parse_mode: "HTML" })
+        }
         if (message.type === 'photo') {
           if (!toChatID) globalBuffer.msgQueue[msg.chat.id].push({ type: 'photo', fileId: message.fileId })
           await bot.sendPhoto(GROUP_ID, message.fileId)
