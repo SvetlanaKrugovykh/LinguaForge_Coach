@@ -17,7 +17,7 @@ module.exports.checkUserPermissions = async function (bot, msg) {
       }
     })
 
-    data = true //TODO response.data
+    data = response.data
     console.log(`User permissions ${msg.chat.id}:`, data)
     return data
   }

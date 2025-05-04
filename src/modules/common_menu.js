@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
 const { menuStarter } = require('../controllers/clientsAdmin')
+const { respondToSelectedClient } = require('../modules/adminMessageHandler')
 require('dotenv').config()
 const { buttonsConfig, texts } = require('../data/keyboard')
 const { testsMenu } = require('../data/tests_keyboard')
@@ -132,6 +133,8 @@ module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = tr
       if (!toChatID) {
         if (!globalBuffer.msgQueue) globalBuffer.msgQueue = {}
         if (!globalBuffer.msgQueue[msg.chat.id]) globalBuffer.msgQueue[msg.chat.id] = []
+      } else {
+        respondToSelectedClient(bot, msg, toChatID)
       }
 
       if (message.type === 'text') {
@@ -178,7 +181,7 @@ module.exports.notTextScene = async function (bot, msg, lang = "en", toSend = tr
       }
     }
 
-    if (toSend) {
+    if (toSend && !toChatID) {
       await bot.sendMessage(chatId, texts[lang]['0_4'], { parse_mode: "HTML" })
     }
   } catch (err) {

@@ -39,21 +39,13 @@ module.exports.respondToSelectedClient = async function (bot, adminMsg, targetCh
 
     const messageToRespond = globalBuffer.msgQueue[targetChatId].shift()
     if (messageToRespond.type === 'text') {
-      await bot.sendMessage(targetChatId, `Admin response:\n${adminMsg.text}`)
-    } else if (messageToRespond.type === 'photo') {
-      await bot.sendPhoto(targetChatId, messageToRespond.fileId, { caption: `Admin response:\n${adminMsg.text}` })
-    } else if (messageToRespond.type === 'document') {
-      await bot.sendDocument(targetChatId, messageToRespond.fileId, { caption: `Admin response:\n${adminMsg.text}` })
-    } else if (messageToRespond.type === 'audio') {
-      await bot.sendAudio(targetChatId, messageToRespond.fileId, { caption: `Admin response:\n${adminMsg.text}` })
-    } else if (messageToRespond.type === 'voice') {
-      await bot.sendVoice(targetChatId, messageToRespond.filePath, { caption: `Admin response:\n${adminMsg.text}` })
+      console.log(`to ${targetChatId}: Admin response:\n${adminMsg.text}`)
     }
 
     if (globalBuffer.msgQueue[targetChatId].length === 0) {
       delete globalBuffer.msgQueue[targetChatId]
     }
-    await bot.sendMessage(adminId, 'Response successfully sent to the client.')
+    await bot.sendMessage(adminId, 'Response will successfully sent to the client.')
   } catch (error) {
     console.error('Error processing admin response:', error)
     await bot.sendMessage(adminMsg.chat.id, 'An error occurred while sending the response.')
