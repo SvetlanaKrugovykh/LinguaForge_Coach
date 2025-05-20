@@ -5,10 +5,10 @@ const { selectedByUser } = require('../globalBuffer')
 require('dotenv').config()
 
 
-module.exports.getVoiceFromTxt = async function (text, lang, msg, bot) {
+module.exports.getVoiceFromTxt = async function (text, lang, msg, bot, type = 'audio') {
   try {
     const response = await axios.post(`${process.env.SERVER_URL}/g-tts`, {
-      query: { "userId": msg.chat.id, "text": text, "lang": lang, "isReturnFile": false }
+      query: { "userId": msg.chat.id, "text": text, "lang": lang, "isReturnFile": false, "type": type },
     }, {
       headers: {
         Authorization: process.env.LG_SERVER_AUTHORIZATION

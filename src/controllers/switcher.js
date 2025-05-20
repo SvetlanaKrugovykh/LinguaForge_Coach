@@ -102,6 +102,14 @@ async function handler(bot, msg) {
         await langS.getVoiceFromTxt(selectedByUser[chatId].text, 'pl', msg, bot)
       }
       break
+    case '0_96':
+      if (!selectedByUser[chatId].text || selectedByUser[chatId].text === '') {
+        await menu.commonStartMenu(bot, msg, true)
+        return
+      } else {
+        await langS.getVoiceFromTxt(selectedByUser[chatId].text, 'pl', msg, bot, 'Dictation')
+      }
+      break
     case '0_7':
       await menu.commonTestsMenu(bot, msg, true)
       break
