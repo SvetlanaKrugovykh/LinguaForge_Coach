@@ -101,7 +101,7 @@ async function handler(bot, msg) {
         await menu.commonStartMenu(bot, msg, true)
         return
       } else {
-        const lang4Voice = process.env.LANG4VOICE || 'pl'
+        const lang4Voice = selectedByUser[chatId]?.voiceSynthesisLanguage || process.env.LANG4VOICE || 'pl'
         await langS.getVoiceFromTxt(selectedByUser[chatId].text, lang4Voice, msg, bot)
       }
       break
