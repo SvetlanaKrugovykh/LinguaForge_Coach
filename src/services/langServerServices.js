@@ -21,7 +21,7 @@ module.exports.getVoiceFromTxt = async function (text, lang, msg, bot, type = 'a
 
     return response.data
   } catch (error) {
-    console.error(error)
+    console.error(error?.message || error)
   }
 }
 
