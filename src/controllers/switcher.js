@@ -202,6 +202,9 @@ async function handler(bot, msg) {
     case '19_4':
     case '19_5':
     case '19_6':
+    case '19_7':
+    case '19_8':
+    case '19_9':
       pinLanguage(data, msg, 'voiceSynthesisLanguage')
       break
     case 'pay_now':
