@@ -82,13 +82,13 @@ function getValidLang(lang) {
 
 module.exports.chooseNativeLanguageMenu = async function (bot, msg, lang = "en", menuType = 'nativeLanguage') {
   let buttonsConfigKey = 'chooseNativeLanguage'
-  if (menuType === 'nativeLanguage') lang = getValidLang(lang)
+  const lang_ = getValidLang(lang)
 
   if (menuType === 'voiceSynthesisLanguage') buttonsConfigKey = 'chooseVoiceSynthesisLanguage'
 
-  await bot.sendMessage(msg.chat.id, buttonsConfig[buttonsConfigKey].title[lang], {
+  await bot.sendMessage(msg.chat.id, buttonsConfig[buttonsConfigKey].title[lang_], {
     reply_markup: {
-      keyboard: buttonsConfig[buttonsConfigKey].buttons[lang],
+      keyboard: buttonsConfig[buttonsConfigKey].buttons[lang_],
       resize_keyboard: true
     }
   })
