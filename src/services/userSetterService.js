@@ -45,6 +45,6 @@ module.exports.getLang = function (menuItem) {
   if (menuItem === '9_3' || menuItem === '19_3') return 'uk'
   if (menuItem === '9_4') return 'pl'
   if (menuItem === '9_5' || menuItem === '19_5') return 'de'
-  if (menuItem === '9_6' || menuItem === '19_6') return 'cz'
+  if (menuItem === '9_6' || menuItem === '19_6') return 'cs'
   return 'en'
 }

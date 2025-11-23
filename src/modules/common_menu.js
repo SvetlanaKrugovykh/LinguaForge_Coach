@@ -75,8 +75,15 @@ module.exports.commonChoice = async function (bot, msg, lang = 'pl') {
 
 }
 
+function getValidLang(lang) {
+  const allowed = ['ru', 'uk', 'pl', 'en']
+  return allowed.includes(lang) ? lang : 'pl'
+}
+
 module.exports.chooseNativeLanguageMenu = async function (bot, msg, lang = "en", menuType = 'nativeLanguage') {
   let buttonsConfigKey = 'chooseNativeLanguage'
+  if (menuType === 'nativeLanguage') lang = getValidLang(lang)
+
   if (menuType === 'voiceSynthesisLanguage') buttonsConfigKey = 'chooseVoiceSynthesisLanguage'
 
   await bot.sendMessage(msg.chat.id, buttonsConfig[buttonsConfigKey].title[lang], {
