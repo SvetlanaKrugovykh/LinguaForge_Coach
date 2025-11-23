@@ -75,10 +75,13 @@ module.exports.commonChoice = async function (bot, msg, lang = 'pl') {
 
 }
 
-module.exports.chooseNativeLanguageMenu = async function (bot, msg, lang = "en") {
-  await bot.sendMessage(msg.chat.id, buttonsConfig["chooseNativeLanguage"].title[lang], {
+module.exports.chooseNativeLanguageMenu = async function (bot, msg, lang = "en", menuType = 'nativeLanguage') {
+  let buttonsConfigKey = 'chooseNativeLanguage'
+  if (menuType === 'voiceSynthesisLanguage') buttonsConfigKey = 'chooseVoiceSynthesisLanguage'
+
+  await bot.sendMessage(msg.chat.id, buttonsConfig[buttonsConfigKey].title[lang], {
     reply_markup: {
-      keyboard: buttonsConfig["chooseNativeLanguage"].buttons[lang],
+      keyboard: buttonsConfig[buttonsConfigKey].buttons[lang],
       resize_keyboard: true
     }
   })

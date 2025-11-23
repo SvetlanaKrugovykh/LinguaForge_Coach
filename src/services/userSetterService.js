@@ -2,14 +2,18 @@ const fs = require('fs')
 const path = require('path')
 const { selectedByUser } = require('../globalBuffer')
 
-module.exports.pinNativeLanguage = function (menuItem, msg) {
+module.exports.pinLanguage = function (menuItem, msg, langType = 'nativeLanguage') {
   try {
     const chatId = msg?.chat?.id
-    const lang = module.exports.getLang(menuItem)
+    const lang_ = module.exports.getLang(menuItem)
 
     if (chatId && lang) {
       if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
-      selectedByUser[chatId].nativeLanguage = lang
+      if (langType === 'voiceSynthesisLanguage') {
+        selectedByUser[chatId].voiceSynthesisLanguage = lang_
+      } else {
+        selectedByUser[chatId].nativeLanguage = lang_
+      }
       selectedByUser[chatId].text = ''
       selectedByUser[chatId].changed = true
       console.log(selectedByUser[chatId])
@@ -36,9 +40,11 @@ module.exports.pinToUserFile = function (chatId) {
 
 
 module.exports.getLang = function (menuItem) {
-  if (menuItem === '9_1') return 'en'
-  if (menuItem === '9_2') return 'ru'
-  if (menuItem === '9_3') return 'uk'
+  if (menuItem === '9_1' || menuItem === '19_1') return 'en'
+  if (menuItem === '9_2' || menuItem === '19_2') return 'ru'
+  if (menuItem === '9_3' || menuItem === '19_3') return 'uk'
   if (menuItem === '9_4') return 'pl'
+  if (menuItem === '9_5' || menuItem === '19_5') return 'de'
+  if (menuItem === '9_6' || menuItem === '19_6') return 'cz'
   return 'en'
 }

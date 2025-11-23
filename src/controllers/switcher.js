@@ -6,7 +6,7 @@ const { textInput } = require('../modules/common_functions')
 const langS = require('../services/langServerServices')
 const { payNow } = require('../controllers/payments')
 const { globalBuffer, selectedByUser } = require('../globalBuffer')
-const { pinNativeLanguage } = require('../services/userSetterService')
+const { pinLanguage } = require('../services/userSetterService')
 const { getFromUserFile } = require('../services/userGetterServices')
 const evS = require('../services/evaluationService')
 const mem = require('../services/memoryService')
@@ -66,6 +66,8 @@ async function handler(bot, msg) {
 
   if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
   let lang = selectedByUser[chatId]?.language || 'pl'
+  let synthesisLang = selectedByUser[chatId]?.voiceSynthesisLanguage || 'pl'
+
   const subj__ = 'Subject:' + selectedByUser[chatId]?.subject || ''
 
   console.log('The choice is:', data)
@@ -119,7 +121,7 @@ async function handler(bot, msg) {
       break
     case '0_9':
       if (selectedByUser[chatId]?.changed) return
-      pinNativeLanguage(data, msg)
+      pinLanguage(data, msg)
       await menu.settingsMenu(bot, msg, lang)
       break
     case '0_16':
@@ -132,7 +134,11 @@ async function handler(bot, msg) {
       break
     case '1_2':
       selectedByUser[chatId].changed = false
-      await menu.chooseNativeLanguageMenu(bot, msg)
+      await menu.chooseNativeLanguageMenu(bot, msg, lang, 'nativeLanguage')
+      break
+    case '11_2':
+      selectedByUser[chatId].changed = false
+      await menu.chooseNativeLanguageMenu(bot, msg, synthesisLang, 'voiceSynthesisLanguage')
       break
     case '2_1':
     case '2_2':
@@ -187,7 +193,15 @@ async function handler(bot, msg) {
     case '9_2':
     case '9_3':
     case '9_4':
-      pinNativeLanguage(data, msg)
+      pinLanguage(data, msg, 'nativeLanguage')
+      break
+    case '19_1':
+    case '19_2':
+    case '19_3':
+    case '19_4':
+    case '19_5':
+    case '19_6':
+      pinLanguage(data, msg, 'voiceSynthesisLanguage')
       break
     case 'pay_now':
       await payNow(bot, msg, lang)
