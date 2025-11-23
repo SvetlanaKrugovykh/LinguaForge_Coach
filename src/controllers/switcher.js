@@ -110,7 +110,8 @@ async function handler(bot, msg) {
         await menu.commonStartMenu(bot, msg, true)
         return
       } else {
-        await langS.getVoiceFromTxt(selectedByUser[chatId].text, 'pl', msg, bot, 'Dictation')
+        const lang4Voice = selectedByUser[chatId]?.voiceSynthesisLanguage || process.env.LANG4VOICE || 'pl'
+        await langS.getVoiceFromTxt(selectedByUser[chatId].text, lang4Voice, msg, bot, 'Dictation')
       }
       break
     case '0_7':
