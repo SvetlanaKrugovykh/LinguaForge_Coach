@@ -7,7 +7,7 @@ module.exports.pinLanguage = function (menuItem, msg, langType = 'nativeLanguage
     const chatId = msg?.chat?.id
     const lang_ = module.exports.getLang(menuItem)
 
-    if (chatId && lang) {
+    if (chatId && lang_) {
       if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
       if (langType === 'voiceSynthesisLanguage') {
         selectedByUser[chatId].voiceSynthesisLanguage = lang_
