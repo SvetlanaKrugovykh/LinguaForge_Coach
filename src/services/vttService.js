@@ -15,7 +15,7 @@ module.exports.getVTT = async function (filePath, tgId) {
     const language = selectedByUser[tgId]?.voiceSynthesisLanguage || process.env.LANG4VOICE || 'pl'
     const form = new FormData()
     form.append('file', fs.createReadStream(filePath))
-    form.append('client_id', tgId)
+    form.append('clientId', tgId)
     form.append('segment_number', '1')
     form.append('language', language)
 
@@ -28,7 +28,8 @@ module.exports.getVTT = async function (filePath, tgId) {
       }
     })
     fs.unlinkSync(filePath)
-    return response.data
+    const translatedText = response?.data?.translated_text || '⚠️❌ [Error: No text returned]'
+    return translatedText
   } catch (error) {
     console.error('Error:', error.message)
     return null
