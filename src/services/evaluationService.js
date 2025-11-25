@@ -5,6 +5,8 @@ const menu = require('../modules/common_menu')
 module.exports.gotoEvaluate = async function (bot, msg, lang, part = '') {
   let filePath
   let response
+  const tgId = msg?.chat?.id || ''
+  if (!tgId) return
 
   switch (part) {
     case '4':
@@ -12,7 +14,7 @@ module.exports.gotoEvaluate = async function (bot, msg, lang, part = '') {
       break
     case '5':
       filePath = await menu.notTextScene(bot, msg, 'pl', false, true)
-      response = await vtt.getVTT(filePath)
+      response = await vtt.getVTT(filePath, tgId)
       if (response) {
         await bot.sendMessage(msg.chat.id, response)
       }

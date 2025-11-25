@@ -2,16 +2,13 @@ const { selectedByUser } = require('../globalBuffer')
 const fs = require('fs')
 const path = require('path')
 const { getFromUserFile } = require('../services/userGetterServices')
-
-
-module.exports.isEmptyObject = function (obj) {
-  return Object.keys(obj).length === 0 && obj.constructor === Object
-}
+require('dotenv').config()
+const usersDataCatalog = process.env.USERS_DATA_CATALOG
 
 module.exports.pinToUserFile = async function (chatId) {
   try {
     if (!selectedByUser[chatId]) return
-    const dirPath = path.join(__dirname, '../../../users/settings')
+    const dirPath = usersDataCatalog
     const filePath = path.join(dirPath, `${chatId}.json`)
 
     fs.mkdirSync(dirPath, { recursive: true })
@@ -19,6 +16,10 @@ module.exports.pinToUserFile = async function (chatId) {
   } catch (error) {
     console.log('Error pinning to user file:', error)
   }
+}
+
+module.exports.isEmptyObject = function (obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
 module.exports.userSettings = async function (msg, operation = 'read', lang = 'pl') {

@@ -1,6 +1,8 @@
 const fs = require('fs')
 const path = require('path')
 const { selectedByUser } = require('../globalBuffer')
+require('dotenv').config()
+const usersDataCatalog = process.env.USERS_DATA_CATALOG
 
 module.exports.pinLanguage = function (menuItem, msg, langType = 'nativeLanguage') {
   try {
@@ -28,7 +30,7 @@ module.exports.pinLanguage = function (menuItem, msg, langType = 'nativeLanguage
 module.exports.pinToUserFile = function (chatId) {
   try {
     if (!selectedByUser[chatId]) return
-    const dirPath = path.join(__dirname, '../../../users/settings')
+    const dirPath = usersDataCatalog
     const filePath = path.join(dirPath, `${chatId}.json`)
 
     fs.mkdirSync(dirPath, { recursive: true })
