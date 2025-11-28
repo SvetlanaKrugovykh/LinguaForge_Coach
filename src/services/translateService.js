@@ -36,6 +36,9 @@ module.exports.callTranslate = async function (bot, msg) {
     const voiceSynthesisLanguage = selectedByUser[msg?.chat?.id]?.voiceSynthesisLanguage || null
     const lang = selectedByUser[msg?.chat?.id]?.nativeLanguage || null
 
+    console.log('voiceSynthesisLanguage:', voiceSynthesisLanguage)
+    console.log('lang:', lang)
+
     if (!voiceSynthesisLanguage) return
 
     if (!text || text.length < inputLength) {
