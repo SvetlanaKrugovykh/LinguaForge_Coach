@@ -11,8 +11,8 @@ function splitMessage(text, maxLen = 4000) {
 }
 
 function firmDesign(text) {
-  // Minimal but attractive design: colored header, clear blocks, emoji, readable font
-  return `[1m[36m[44m\u2728 LinguaForge Coach \u2728\u001b[0m\n\n${text}\n\n\uD83D\uDCDA` // Telegram ignores ANSI, but header/emoji for style
+  // Minimal but attractive design: emoji header, clear blocks, readable font
+  return `✨ <b>LinguaForge Coach</b> ✨\n\n${text}\n\n📚`
 }
 
 module.exports.sendFirmMessage = async function (bot, chatId, text, options = { parse_mode: 'HTML' }) {
