@@ -46,10 +46,11 @@ module.exports.callTranslate = async function (bot, msg) {
       return
     }
 
-    const response = await ollamaRequest('translateWithExplain', {
+    const response = await ollamaRequest('translate', {
       text: text,
-      language: voiceSynthesisLanguage,
-      native_language: lang
+      from: voiceSynthesisLanguage,
+      to: lang,
+      // explain_language: lang
     })
 
     await sendFirmMessage(bot, msg.chat.id, response, { parse_mode: 'HTML' })
