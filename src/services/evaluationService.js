@@ -3,6 +3,18 @@ const langT = require('./langTool')
 const menu = require('../modules/common_menu')
 const { check } = require('./langTool')
 
+function deduplicateSentences(text) {
+  const sentences = text.split(/(?<=[.!?])\s+/)
+  const seen = new Set()
+  return sentences.filter(s => {
+    const trimmed = s.trim()
+    if (!trimmed) return false
+    if (seen.has(trimmed)) return false
+    seen.add(trimmed)
+    return true
+  }).join(' ')
+}
+
 module.exports.gotoEvaluate = async function (bot, msg, lang, part = '') {
   let filePath
   let response
@@ -17,8 +29,9 @@ module.exports.gotoEvaluate = async function (bot, msg, lang, part = '') {
       filePath = await menu.notTextScene(bot, msg, 'pl', false, true)
       response = await vtt.getVTT(filePath, tgId)
       if (response) {
-        await bot.sendMessage(msg.chat.id, response)
-        await check(bot, msg, lang, response)
+        const deduped = deduplicateSentences(response)
+        await bot.sendMessage(msg.chat.id, deduped)
+        await check(bot, msg, lang, deduped)
       }
       break
     default:
