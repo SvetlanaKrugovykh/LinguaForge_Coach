@@ -11,6 +11,7 @@ const { getFromUserFile } = require('../services/userGetterServices')
 const evS = require('../services/evaluationService')
 const mem = require('../services/memoryService')
 const dsa = require('../services/textAnalyze')
+const wordsTool = require('../services/wordsTool')
 
 require('dotenv').config()
 
@@ -93,6 +94,17 @@ async function handler(bot, msg) {
       selectedByUser[chatId].text = ''
       await textInput(bot, msg, data)
       answer = await menu.translation(bot, msg, data)
+      if (answer && Array.isArray(answer) && answer[0]) {
+        const wordData = {
+          word: answer[0].word || '',
+          wordForms: answer[0].word_forms || '',
+          russian: answer[0].ru || '',
+          ukrainian: answer[0].uk || '',
+          english: answer[0].en || '',
+          partOfSpeech: answer[0].part_of_speech || ''
+        }
+        await wordsTool.analyzeWord(bot, msg.chat.id, wordData)
+      }
       if (answer) await menu.wordPinMenu(bot, msg, lang)
       selectedByUser[chatId].text = ''
       break
