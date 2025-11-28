@@ -101,7 +101,9 @@ async function handler(bot, msg) {
           russian: answer[0].ru || '',
           ukrainian: answer[0].uk || '',
           english: answer[0].en || '',
-          partOfSpeech: answer[0].part_of_speech || ''
+          partOfSpeech: answer[0].part_of_speech || '',
+          language: lang,
+          explain_language: selectedByUser[chatId]?.nativeLanguage
         }
         await wordsTool.analyzeWord(bot, msg.chat.id, wordData)
       }
