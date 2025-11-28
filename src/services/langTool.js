@@ -5,10 +5,10 @@ const { selectedByUser } = require('../globalBuffer')
 const prompts = require('../data/prompts')
 require('dotenv').config()
 
-module.exports.check = async function (bot, msg, lang) {
+module.exports.check = async function (bot, msg, lang, inputText = null) {
   try {
     let inputLength = 3
-    const text = (await inputLineScene(bot, msg)).trim()
+    const text = inputText ? inputText.trim() : (await inputLineScene(bot, msg)).trim()
     const voiceSynthesisLanguage = selectedByUser[msg?.chat?.id]?.voiceSynthesisLanguage || null
 
     if (!voiceSynthesisLanguage) return

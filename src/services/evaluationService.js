@@ -1,6 +1,7 @@
 const vtt = require('./vttService')
 const langT = require('./langTool')
 const menu = require('../modules/common_menu')
+const { check } = require('./langTool')
 
 module.exports.gotoEvaluate = async function (bot, msg, lang, part = '') {
   let filePath
@@ -17,6 +18,7 @@ module.exports.gotoEvaluate = async function (bot, msg, lang, part = '') {
       response = await vtt.getVTT(filePath, tgId)
       if (response) {
         await bot.sendMessage(msg.chat.id, response)
+        await check(bot, msg, lang, response)
       }
       break
     default:
