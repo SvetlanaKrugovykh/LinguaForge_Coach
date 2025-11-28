@@ -24,7 +24,8 @@ module.exports.check = async function (bot, msg, lang) {
       native_language: lang
     })
 
-    await bot.sendMessage(msg.chat.id, response, { parse_mode: 'HTML' })
+    const { sendFirmMessage } = require('../modules/firmMessageSender')
+    await sendFirmMessage(bot, msg.chat.id, response, { parse_mode: 'HTML' })
   } catch (error) {
     console.error('Error check LANG_TOOL:', error.message)
   }
@@ -55,19 +56,4 @@ async function ollamaRequest(promptName, promptParams) {
 
   return resultText.trim()
 
-}
-
-function formatMatches(matches) {
-  if (matches.length === 0) {
-    return 'No issues found in the text.'
-  }
-
-  let message = '<b>Text Analysis Results:</b>\n\n'
-  matches.forEach((match, index) => {
-    message += `<b>${index + 1}.</b> ${match.message}\n`
-    message += `<i>Context:</i> ${match.context.text}\n`
-    message += `<i>Suggestions:</i> ${match.replacements.map(rep => rep.value).join(', ')}\n\n`
-  })
-
-  return message
 }
