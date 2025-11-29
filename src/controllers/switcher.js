@@ -102,6 +102,7 @@ async function handler(bot, msg) {
           ukrainian: answer[0].uk || '',
           english: answer[0].en || '',
           partOfSpeech: answer[0].part_of_speech || '',
+          gender: answer[0].gender || '-',
           language: lang,
           explain_language: selectedByUser[chatId]?.nativeLanguage
         }

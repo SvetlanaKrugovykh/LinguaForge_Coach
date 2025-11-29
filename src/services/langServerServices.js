@@ -62,14 +62,18 @@ module.exports.getLangData = async function (text, chatId, bot, lang) {
 
 
 function createWordCard(item) {
-  let result = ''
-  if (item.word) result += `<b>Word: ${item.word}</b>\n\n`
-  if (item.word_forms) result += `<b>Word Forms:</b> ${item.word_forms}\n\n`
-  if (item.ru) result += `<b>Russian:</b> ${item.ru}\n\n`
-  if (item.uk) result += `<b>Ukrainian:</b> ${item.uk}\n\n`
-  if (item.en) result += `<b>English:</b> ${item.en}\n\n`
-  if (item.part_of_speech) result += `<b>Part of Speech:</b> ${item.part_of_speech}\n\n`
-  if (item.frequency) result += `<b>Frequency:</b> ${item.frequency}\n`
+  let result = '✨ <b>Word Card</b> ✨\n'
+  result += '───────────────\n'
+  if (item.word) result += `🔤 <b>Word:</b> <i>${item.word}</i>\n\n`
+  if (item.word_forms) result += `🧩 <b>Forms:</b> <i>${item.word_forms}</i>\n\n`
+  if (item.ru) result += `🇷🇺 <b>Russian:</b> <i>${item.ru}</i>\n\n`
+  if (item.uk) result += `🇺🇦 <b>Ukrainian:</b> <i>${item.uk}</i>\n\n`
+  if (item.en) result += `🇬🇧 <b>English:</b> <i>${item.en}</i>\n\n`
+  if (item.part_of_speech) result += `📖 <b>Part of Speech:</b> <i>${item.part_of_speech}</i>\n\n`
+  if (item.gender) result += `⚧️ <b>Gender:</b> <i>${item.gender}</i>\n\n`
+  if (item.frequency) result += `⚡️ <b>Frequency:</b> <i>${item.frequency}</i>\n\n`
+  if (item.explanation) result += `💡 <b>Explanation:</b> <i>${item.explanation}</i>\n\n`
+  result += '───────────────'
   return result
 }
 
