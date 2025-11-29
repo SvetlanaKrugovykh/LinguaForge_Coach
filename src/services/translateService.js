@@ -29,7 +29,7 @@ async function ollamaRequest(promptName, promptParams) {
   return resultText.trim()
 }
 
-module.exports.callTranslate = async function (bot, msg) {
+module.exports.callTranslate = async function (bot, msg, direction = 'direct') {
   try {
     const inputLength = 3
     const text = selectedByUser[msg.chat.id]?.text
@@ -48,8 +48,8 @@ module.exports.callTranslate = async function (bot, msg) {
 
     const response = await ollamaRequest('translate', {
       text: text,
-      from: voiceSynthesisLanguage,
-      to: lang,
+      from: direction === 'direct' ? voiceSynthesisLanguage : lang,
+      to: direction === 'direct' ? lang : voiceSynthesisLanguage,
       // explain_language: lang
     })
 

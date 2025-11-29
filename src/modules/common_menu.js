@@ -248,6 +248,6 @@ module.exports.downloadPDF = async function (bot, msg, lang = 'pl', fileN) {
   }
 }
 
-module.exports.textTranslation = async function (bot, msg) {
-  await translateS.callTranslate(bot, msg)
+module.exports.textTranslation = async function (bot, msg, direction = 'direct') {
+  await translateS.callTranslate(bot, msg, direction)
 }

@@ -75,9 +75,13 @@ async function handler(bot, msg) {
   const rightmostChar = data.slice(-1)
 
   switch (data) {
-    case '0_0':
+    case '7_0':
       await textInput(bot, msg, data)
-      await menu.textTranslation(bot, msg)
+      await menu.textTranslation(bot, msg, 'reverse')
+      break
+    case '6_9':
+      await textInput(bot, msg, data)
+      await menu.textTranslation(bot, msg, 'direct')
       break
     case '0_1':
       await textInput(bot, msg, data)
@@ -201,9 +205,6 @@ async function handler(bot, msg) {
       break
     case '5_34':
       await mem.doWordMemorize(msg)
-      break
-    case '7_0':
-      await dsa.deepSeekAnylize(bot, msg, lang)
       break
     case '9_1':
     case '9_2':
