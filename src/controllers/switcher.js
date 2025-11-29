@@ -67,7 +67,9 @@ async function handler(bot, msg) {
 
   if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
   let lang = selectedByUser[chatId]?.language || 'pl'
+  let menuLang = selectedByUser[chatId]?.menuLanguage || 'pl'
   let synthesisLang = selectedByUser[chatId]?.voiceSynthesisLanguage || 'pl'
+  let learningLanguage = selectedByUser[chatId]?.learningLanguage || 'pl'
 
   const subj__ = 'Subject:' + selectedByUser[chatId]?.subject || ''
 
@@ -85,7 +87,7 @@ async function handler(bot, msg) {
       break
     case '0_1':
       await textInput(bot, msg, data)
-      await menu.commonChoice(bot, msg, lang)
+      await menu.commonChoice(bot, msg, menuLang)
       break
     case '0_2':
       await menu.notTextScene(bot, msg)
@@ -137,20 +139,20 @@ async function handler(bot, msg) {
       await menu.commonTestsMenu(bot, msg, true)
       break
     case '0_8':
-      await menu.settingsMenu(bot, msg, lang)
+      await menu.settingsMenu(bot, msg, menuLang)
       break
     case '0_9':
       if (selectedByUser[chatId]?.changed) return
       pinLanguage(data, msg)
-      await menu.settingsMenu(bot, msg, lang)
+      await menu.settingsMenu(bot, msg, menuLang)
       break
     case '0_16':
       answer = await langS.getLangData(subj__, msg.chat.id, bot, lang)
-      if (answer) await menu.wordPinMenu(bot, msg, lang)
+      if (answer) await menu.wordPinMenu(bot, msg, menuLang)
       break
     case '1_1':
       selectedByUser[chatId].changed = false
-      await menu.downloadPDF(bot, msg, lang, 'pl')
+      await menu.downloadPDF(bot, msg, menuLang, 'pl')
       break
     case '1_2':
       selectedByUser[chatId].changed = false
@@ -162,11 +164,11 @@ async function handler(bot, msg) {
       break
     case '22_2':
       selectedByUser[chatId].changed = false
-      await menu.chooseNativeLanguageMenu(bot, msg, synthesisLang, 'learningLanguage')
+      await menu.chooseNativeLanguageMenu(bot, msg, learningLanguage, 'learningLanguage')
       break
     case '32_2':
       selectedByUser[chatId].changed = false
-      await menu.chooseNativeLanguageMenu(bot, msg, synthesisLang, 'menuLanguage')
+      await menu.chooseNativeLanguageMenu(bot, msg, menuLang, 'menuLanguage')
       break
     case '2_1':
     case '2_2':
@@ -174,42 +176,42 @@ async function handler(bot, msg) {
       selectedByUser[chatId].currentTest = {}
       selectedByUser[chatId].answerSet = []
       selectedByUser[chatId].OptionsParts1_3 = rightmostChar
-      await tests.OptionsParts1_3(bot, msg, lang)
+      await tests.OptionsParts1_3(bot, msg, menuLang)
       break
     case '2_4':
     case '2_5':
       selectedByUser[chatId].currentOpus = {}
       selectedByUser[chatId].answerSet = []
       selectedByUser[chatId].OptionsParts4_6 = rightmostChar
-      await tests.OptionsParts4_6(bot, msg, lang)
+      await tests.OptionsParts4_6(bot, msg, menuLang)
       break
     case '2_6':
       selectedByUser[chatId].currentOpus = {}
       selectedByUser[chatId].answerSet = []
       selectedByUser[chatId].OptionsParts4_6 = rightmostChar
-      await tests.getSubjectsMenu(bot, msg, lang)
+      await tests.getSubjectsMenu(bot, msg, menuLang)
       break
     case '3_1':
     case '3_2':
     case '3_3':
-      await tests.do1Test(bot, msg, lang)
+      await tests.do1Test(bot, msg, menuLang)
       break
     case '5_1':
     case '5_2':
       selectedByUser[chatId].size = rightmostChar
-      await tests.getOpus(bot, msg, lang)
+      await tests.getOpus(bot, msg, menuLang)
       break
     case '5_3':
-      await tests.putOpus(bot, msg, lang)
+      await tests.putOpus(bot, msg, menuLang)
       break
     case '5_4':
-      await evS.gotoEvaluate(bot, msg, lang, selectedByUser[chatId].OptionsParts4_6)
+      await evS.gotoEvaluate(bot, msg, menuLang, selectedByUser[chatId].OptionsParts4_6)
       break
     case '5_5':
-      await langS.SendVoiceOutOpus(bot, msg, lang)
+      await langS.SendVoiceOutOpus(bot, msg, menuLang)
       break
     case '5_33':
-      await tests.putWord(bot, chatId, lang)
+      await tests.putWord(bot, chatId, menuLang)
       break
     case '5_34':
       await mem.doWordMemorize(msg)
@@ -259,10 +261,10 @@ async function handler(bot, msg) {
       pinLanguage(data, msg, 'menuLanguage')
       break
     case 'pay_now':
-      await payNow(bot, msg, lang)
+      await payNow(bot, msg, menuLang)
       break
     case 'download_info':
-      await menu.downloadPDF(bot, msg, lang, 'regulamin')
+      await menu.downloadPDF(bot, msg, menuLang, 'regulamin')
       break
     default:
       await menu.commonStartMenu(bot, msg, true)

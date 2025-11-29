@@ -44,7 +44,7 @@ bot.on('message', async (msg) => {
 
 bot.on('text', async (msg) => {
 
-  const lang = getU.getLanguage(msg.chat.id)
+  const lang = getU.getMenuLanguage(msg.chat.id)
 
   if (msg.text.includes('▫')) {
     await testS.saveUserAnswerData(msg, bot, lang, msg.text)
