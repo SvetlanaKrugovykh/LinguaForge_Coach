@@ -85,6 +85,8 @@ module.exports.chooseNativeLanguageMenu = async function (bot, msg, lang = "en",
   const lang_ = getValidLang(lang)
 
   if (menuType === 'voiceSynthesisLanguage') buttonsConfigKey = 'chooseVoiceSynthesisLanguage'
+  if (menuType === 'learningLanguage') buttonsConfigKey = 'chooseLearningLanguage'
+  if (menuType === 'menuLanguage') buttonsConfigKey = 'chooseMenuLanguage'
 
   await bot.sendMessage(msg.chat.id, buttonsConfig[buttonsConfigKey].title[lang_], {
     reply_markup: {

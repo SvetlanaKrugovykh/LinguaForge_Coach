@@ -18,14 +18,12 @@ module.exports.pinLanguage = function (menuItem, msg, langType = 'nativeLanguage
           break
         case 'nativeLanguage':
           selectedByUser[chatId].nativeLanguage = lang_
-          // If menuLanguage is not set, set it to nativeLanguage
           if (!selectedByUser[chatId].menuLanguage) {
             selectedByUser[chatId].menuLanguage = lang_
           }
           break
         case 'learningLanguage':
-          selectedByUser[chatId].learningLanguage = lang_;
-          // If voiceSynthesisLanguage is not set, set it to learningLanguage
+          selectedByUser[chatId].learningLanguage = lang_
           if (!selectedByUser[chatId].voiceSynthesisLanguage) {
             selectedByUser[chatId].voiceSynthesisLanguage = lang_
           }
