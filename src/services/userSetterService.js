@@ -69,15 +69,18 @@ module.exports.pinToUserFile = function (chatId) {
         menu_language: selectedByUser[chatId].menuLanguage || ''
       }
       try {
-        require('axios').post(`${SERVER_URL}/user-set`, userData)
+        const axios = require('axios');
+        const LG_SERVER_AUTHORIZATION = process.env.LG_SERVER_AUTHORIZATION;
+        const headers = LG_SERVER_AUTHORIZATION ? { Authorization: LG_SERVER_AUTHORIZATION } : {};
+        axios.post(`${SERVER_URL}/user-set`, userData, { headers })
           .then(res => {
-            if (res.status !== 200) console.log('Server user-set error:', res.status, res.data)
+            if (res.status !== 200) console.log('Server user-set error:', res.status, res.data);
           })
           .catch(err => {
-            console.log('Server user-set error:', err?.response?.data || err.message)
+            console.log('Server user-set error:', err?.response?.data || err.message);
           });
       } catch (err) {
-        console.log('Axios error:', err)
+        console.log('Axios error:', err);
       }
     }
   } catch (error) {
