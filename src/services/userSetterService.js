@@ -53,6 +53,33 @@ module.exports.pinToUserFile = function (chatId) {
 
     fs.mkdirSync(dirPath, { recursive: true })
     fs.writeFileSync(filePath, JSON.stringify(selectedByUser[chatId], null, 2))
+
+    // Send user data to server
+    const SERVER_URL = process.env.SERVER_URL
+    if (SERVER_URL) {
+      // Prepare user data for tg_users table
+      const userData = {
+        user_id: chatId,
+        first_name: selectedByUser[chatId].first_name || '',
+        last_name: selectedByUser[chatId].last_name || '',
+        username: selectedByUser[chatId].username || '',
+        language_code: selectedByUser[chatId].nativeLanguage || '',
+        learning_language: selectedByUser[chatId].learningLanguage || '',
+        tts_language: selectedByUser[chatId].voiceSynthesisLanguage || '',
+        menu_language: selectedByUser[chatId].menuLanguage || ''
+      }
+      try {
+        require('axios').post(`${SERVER_URL}/user-set`, userData)
+          .then(res => {
+            if (res.status !== 200) console.log('Server user-set error:', res.status, res.data)
+          })
+          .catch(err => {
+            console.log('Server user-set error:', err?.response?.data || err.message)
+          });
+      } catch (err) {
+        console.log('Axios error:', err)
+      }
+    }
   } catch (error) {
     console.log('Error pinning to user file:', error)
   }
