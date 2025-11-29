@@ -11,10 +11,22 @@ module.exports.pinLanguage = function (menuItem, msg, langType = 'nativeLanguage
 
     if (chatId && lang_) {
       if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
-      if (langType === 'voiceSynthesisLanguage') {
-        selectedByUser[chatId].voiceSynthesisLanguage = lang_
-      } else {
-        selectedByUser[chatId].nativeLanguage = lang_
+
+      switch (langType) {
+        case 'voiceSynthesisLanguage':
+          selectedByUser[chatId].voiceSynthesisLanguage = lang_
+          break
+        case 'nativeLanguage':
+          selectedByUser[chatId].nativeLanguage = lang_
+          break
+        case 'learningLanguage':
+          selectedByUser[chatId].learningLanguage = lang_
+          break
+        case 'menuLanguage':
+          selectedByUser[chatId].menuLanguage = lang_
+          break
+        default:
+          selectedByUser[chatId].nativeLanguage = lang_
       }
       selectedByUser[chatId].text = ''
       selectedByUser[chatId].changed = true
@@ -42,14 +54,14 @@ module.exports.pinToUserFile = function (chatId) {
 
 
 module.exports.getLang = function (menuItem) {
-  if (menuItem === '9_1' || menuItem === '19_1') return 'en'
-  if (menuItem === '9_2' || menuItem === '19_2') return 'ru'
-  if (menuItem === '9_3' || menuItem === '19_3') return 'uk'
-  if (menuItem === '9_4' || menuItem === '19_4') return 'pl'
-  if (menuItem === '19_5') return 'de'
-  if (menuItem === '19_6') return 'cs'
-  if (menuItem === '19_7') return 'es'
-  if (menuItem === '19_8') return 'fr'
-  if (menuItem === '19_9') return 'it'
+  if (/^[9|19|29|39]_1$/.test(menuItem)) return 'en'
+  if (/^[9|19|29|39]_2$/.test(menuItem)) return 'ru'
+  if (/^[9|19|29|39]_3$/.test(menuItem)) return 'uk'
+  if (/^[9|19|29|39]_4$/.test(menuItem)) return 'pl'
+  if (/^[9|19|29|39]_5$/.test(menuItem)) return 'de'
+  if (/^[9|19|29|39]_6$/.test(menuItem)) return 'cs'
+  if (/^[9|19|29|39]_7$/.test(menuItem)) return 'es'
+  if (/^[9|19|29|39]_8$/.test(menuItem)) return 'fr'
+  if (/^[9|19|29|39]_9$/.test(menuItem)) return 'it'
   return 'en'
 }

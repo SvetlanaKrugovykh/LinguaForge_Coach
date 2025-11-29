@@ -210,6 +210,11 @@ async function handler(bot, msg) {
     case '9_2':
     case '9_3':
     case '9_4':
+    case '9_5':
+    case '9_6':
+    case '9_7':
+    case '9_8':
+    case '9_9':
       pinLanguage(data, msg, 'nativeLanguage')
       break
     case '19_1':
@@ -222,6 +227,28 @@ async function handler(bot, msg) {
     case '19_8':
     case '19_9':
       pinLanguage(data, msg, 'voiceSynthesisLanguage')
+      break
+    case '29_1':
+    case '29_2':
+    case '29_3':
+    case '29_4':
+    case '29_5':
+    case '29_6':
+    case '29_7':
+    case '29_8':
+    case '29_9':
+      pinLanguage(data, msg, 'learningLanguage')
+      break
+    case '39_1':
+    case '39_2':
+    case '39_3':
+    case '39_4':
+    case '39_5':
+    case '39_6':
+    case '39_7':
+    case '39_8':
+    case '39_9':
+      pinLanguage(data, msg, 'menuLanguage')
       break
     case 'pay_now':
       await payNow(bot, msg, lang)
