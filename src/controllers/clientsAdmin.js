@@ -22,12 +22,12 @@ async function actionsOnId(bot, msg, inputLine) {
   }
 }
 
-module.exports.clientsAdmin = async function (bot, msg) {
-  await module.exports.menuStarter(bot, msg)
+module.exports.clientsAdmin = async function (bot, msg, buttons_, lang_ = 'pl') {
+  await module.exports.menuStarter(bot, msg, buttons_, lang_)
 }
 
-module.exports.menuStarter = async function (bot, msg, lang = 'pl') {
-  await module.exports.sendstarterButtons(bot, msg, lang)
+module.exports.menuStarter = async function (bot, msg, buttons_, lang_ = 'pl') {
+  await module.exports.sendstarterButtons(bot, msg, lang_)
   console.log(((new Date()).toLocaleTimeString()))
 }
 
@@ -46,7 +46,6 @@ module.exports.sendstarterButtons = async function (bot, msg) {
       resize_keyboard: true
     }
   })
-
 }
 
 module.exports.clientsAdminResponseToRequest = async function (bot, msg) {
@@ -66,5 +65,6 @@ module.exports.clientsAdminResponseToRequest = async function (bot, msg) {
   const txtCommandForSend = 'id#' + codeChat + 'id#' + txtCommand
   await actionsOnId(bot, msg, txtCommandForSend)
 }
+
 
 

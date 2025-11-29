@@ -12,17 +12,17 @@ const { checkUserPermissions } = require('../services/checkUsers')
 const langS = require('../services/langServerServices')
 const translateS = require('../services/translateService')
 
-module.exports.commonStartMenu = async function (bot, msg) {
+module.exports.commonStartMenu = async function (bot, msg, lang_) {
   console.log(`/start at ${new Date()} tg_user_id: ${msg.chat.id}`)
   const adminUser = users.find(user => user.id === msg.chat.id)
   if (adminUser) {
-    await menuStarter(bot, msg, buttonsConfig["starterButtons"])
+    await menuStarter(bot, msg, buttonsConfig["starterButtons"], lang_)
   } else {
     const permissionAccepted = await checkUserPermissions(bot, msg)
     if (permissionAccepted) {
-      await menuStarter(bot, msg, buttonsConfig["starterButtons"])
+      await menuStarter(bot, msg, buttonsConfig["starterButtons"], lang_)
     } else {
-      await module.exports.userMenu(bot, msg)
+      await module.exports.userMenu(bot, msg, lang_)
       await blockMenu(bot, msg)
     }
   }
