@@ -181,14 +181,13 @@ async function handler(bot, msg) {
 			break
 		case '1_2':
 			selectedByUser[chatId].changed = false
-			await menu.chooseLanguageMenu(bot, msg, lang, 'nativeLanguage')
+			await menu.chooseLanguageMenu(bot, msg, 'nativeLanguage')
 			break
 		case '11_2':
 			selectedByUser[chatId].changed = false
 			await menu.chooseLanguageMenu(
 				bot,
 				msg,
-				synthesisLang,
 				'voiceSynthesisLanguage'
 			)
 			break
@@ -197,13 +196,12 @@ async function handler(bot, msg) {
 			await menu.chooseLanguageMenu(
 				bot,
 				msg,
-				learningLanguage,
 				'learningLanguage'
 			)
 			break
 		case '32_2':
 			selectedByUser[chatId].changed = false
-			await menu.chooseLanguageMenu(bot, msg, menuLang, 'menuLanguage')
+			await menu.chooseLanguageMenu(bot, msg, 'menuLanguage')
 			break
 		case '2_1':
 		case '2_2':

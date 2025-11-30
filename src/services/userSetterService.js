@@ -7,7 +7,7 @@ const usersDataCatalog = process.env.USERS_DATA_CATALOG
 module.exports.pinLanguage = function (menuItem, msg, langType = 'nativeLanguage') {
   try {
     const chatId = msg?.chat?.id
-    const lang_ = module.exports.getLang(menuItem)
+    const lang_ = module.exports.getLang_(menuItem)
 
     if (chatId && lang_) {
       if (!selectedByUser[chatId]) selectedByUser[chatId] = {}
@@ -89,15 +89,15 @@ module.exports.pinToUserFile = function (chatId) {
 }
 
 
-module.exports.getLang = function (menuItem) {
-  if (/^(9|19|29|39)_1$/.test(menuItem)) return 'en';
-  if (/^(9|19|29|39)_2$/.test(menuItem)) return 'ru';
-  if (/^(9|19|29|39)_3$/.test(menuItem)) return 'uk';
-  if (/^(9|19|29|39)_4$/.test(menuItem)) return 'pl';
-  if (/^(9|19|29|39)_5$/.test(menuItem)) return 'de';
-  if (/^(9|19|29|39)_6$/.test(menuItem)) return 'cs';
-  if (/^(9|19|29|39)_7$/.test(menuItem)) return 'es';
-  if (/^(9|19|29|39)_8$/.test(menuItem)) return 'fr';
-  if (/^(9|19|29|39)_9$/.test(menuItem)) return 'it';
-  return 'en'
+module.exports.getLang_ = function (menuItem) {
+  if (/^(9|19|29|39)_1$/.test(menuItem)) return 'en'
+  if (/^(9|19|29|39)_2$/.test(menuItem)) return 'ru'
+  if (/^(9|19|29|39)_3$/.test(menuItem)) return 'uk'
+  if (/^(9|19|29|39)_4$/.test(menuItem)) return 'pl'
+  if (/^(9|19|29|39)_5$/.test(menuItem)) return 'de'
+  if (/^(9|19|29|39)_6$/.test(menuItem)) return 'cs'
+  if (/^(9|19|29|39)_7$/.test(menuItem)) return 'es'
+  if (/^(9|19|29|39)_8$/.test(menuItem)) return 'fr'
+  if (/^(9|19|29|39)_9$/.test(menuItem)) return 'it'
+  return null
 }

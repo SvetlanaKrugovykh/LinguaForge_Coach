@@ -1,8 +1,8 @@
-const { selectedByUser } = require("../globalBuffer")
-const axios = require("axios")
-const prompts = require("../data/prompts")
-const { sendFirmMessage } = require("../modules/firmMessageSender")
-require("dotenv").config()
+const { selectedByUser } = require('../globalBuffer')
+const axios = require('axios')
+const prompts = require('../data/prompts')
+const { sendFirmMessage } = require('../modules/firmMessageSender')
+require('dotenv').config()
 
 async function ollamaRequest(promptName, promptParams) {
 	const URL_LANG_TOOL = process.env.URL_LANG_TOOL
@@ -10,14 +10,14 @@ async function ollamaRequest(promptName, promptParams) {
 	const response = await axios.post(
 		URL_LANG_TOOL,
 		{
-			model: "qwen2:7b",
+			model: 'qwen2:7b',
 			prompt: promptText,
 		},
-		{ headers: { "Content-Type": "application/json" } }
+		{ headers: { 'Content-Type': 'application/json' } }
 	)
-	let resultText = ""
-	if (typeof response.data === "string") {
-		response.data.split("\n").forEach((line) => {
+	let resultText = ''
+	if (typeof response.data === 'string') {
+		response.data.split('\n').forEach((line) => {
 			try {
 				const obj = JSON.parse(line)
 				if (obj.response) resultText += obj.response
@@ -29,7 +29,7 @@ async function ollamaRequest(promptName, promptParams) {
 	return resultText.trim()
 }
 
-module.exports.callTranslate = async function (bot, msg, direction = "direct") {
+module.exports.callTranslate = async function (bot, msg, direction = 'direct') {
 	try {
 		const inputLength = 3
 		const text = selectedByUser[msg.chat.id]?.text
@@ -37,28 +37,28 @@ module.exports.callTranslate = async function (bot, msg, direction = "direct") {
 			selectedByUser[msg?.chat?.id]?.learningLanguage || null
 		const lang = selectedByUser[msg?.chat?.id]?.nativeLanguage || null
 
-		console.log("learningLanguage:", learningLanguage)
-		console.log("lang:", lang)
+		console.log('learningLanguage:', learningLanguage)
+		console.log('lang:', lang)
 
 		if (!learningLanguage) return
 
 		if (!text || text.length < inputLength) {
-			await bot.sendMessage(msg.chat.id, "that`s not enough\n", {
-				parse_mode: "HTML",
+			await bot.sendMessage(msg.chat.id, 'that`s not enough\n', {
+				parse_mode: 'HTML',
 			})
 			return
 		}
 
-		const response = await ollamaRequest("translate", {
+		const response = await ollamaRequest('translate', {
 			text: text,
-			from: direction === "direct" ? learningLanguage : lang,
-			to: direction === "direct" ? lang : learningLanguage,
+			from: direction === 'direct' ? learningLanguage : lang,
+			to: direction === 'direct' ? lang : learningLanguage,
 			// explain_language: lang
 		})
 
-		await sendFirmMessage(bot, msg.chat.id, response, { parse_mode: "HTML" })
+		await sendFirmMessage(bot, msg.chat.id, response, { parse_mode: 'HTML' })
 	} catch (error) {
-		console.error("Error in callTranslate:", error.message)
+		console.error('Error in callTranslate:', error.message)
 	}
 }
 
@@ -70,7 +70,7 @@ module.exports.callTranslate_OLD = async function (bot, msg) {
 		}`
 
 		if (!text || !direction || text.length < 7 || direction.length < 5) {
-			console.log("Invalid text or direction:", { text, direction })
+			console.log('Invalid text or direction:', { text, direction })
 			return
 		}
 
@@ -88,11 +88,11 @@ module.exports.callTranslate_OLD = async function (bot, msg) {
 			translatedText =
 				response.data.translated_text?.[0] ||
 				response.data?.replyData?.translated_text?.[0] ||
-				"Default value if not found"
+				'Default value if not found'
 
 			console.log(translatedText)
 			await bot.sendMessage(msg.chat.id, `<b>${dir}:</b>\n${translatedText}`, {
-				parse_mode: "HTML",
+				parse_mode: 'HTML',
 			})
 		}
 
@@ -100,8 +100,8 @@ module.exports.callTranslate_OLD = async function (bot, msg) {
 		console.log(`${endTime}: JSON request duration: ${endTime - startTime}ms`)
 	} catch (error) {
 		await bot.sendMessage(msg.chat.id, `Sorry. Service under construction`, {
-			parse_mode: "HTML",
+			parse_mode: 'HTML',
 		})
-		console.error("Error translating text:", error)
+		console.error('Error translating text:', error)
 	}
 }
