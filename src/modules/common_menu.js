@@ -253,7 +253,7 @@ module.exports.translation = async function (bot, msg, data) {
 	const text = selectedByUser[chatId].text
 	if (!text || text === '') return
 
-	const lang = selectedByUser[chatId].language || 'pl'
+	const lang = selectedByUser[chatId]?.learningLanguage || "pl"
 	const answer = await langS.getLangData(text, chatId, bot, lang)
 	if (!answer) return null
 	return answer

@@ -30,7 +30,8 @@ module.exports.getLangData = async function (text, chatId, bot, lang) {
     let data = ''
     const response = await axios.post(`${process.env.SERVER_URL}/co-to-jest`, {
       "text": text,
-      "userId": chatId
+      "userId": chatId,
+      "lang": lang
     }, {
       headers: {
         Authorization: process.env.LG_SERVER_AUTHORIZATION
