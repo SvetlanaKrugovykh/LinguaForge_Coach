@@ -85,11 +85,11 @@ module.exports.commonChoice = async function (bot, msg) {
 }
 
 function getValidLang(lang) {
-	const allowed = ["ru", "uk", "pl", "en"]
-	return allowed.includes(lang) ? lang : "pl"
+	const allowed = ["ru", "uk", "pl", "en", "cs", "de", "fr", "es", "it"]
+	return allowed.includes(lang) ? lang : "en"
 }
 
-module.exports.chooseNativeLanguageMenu = async function (
+module.exports.chooseLanguageMenu = async function (
 	bot,
 	msg,
 	menuType = "nativeLanguage"
