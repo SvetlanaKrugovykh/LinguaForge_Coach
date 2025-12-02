@@ -71,10 +71,15 @@ async function handler(bot, msg) {
 	const data = getCallbackData(msg.text)
 	if (!data) return
 
-	if (!selectedByUser[chatId]) selectedByUser[chatId] = getFromUserFile(chatId)
+if (!selectedByUser[chatId]) {
+	selectedByUser[chatId] =
+		await require("../services/userInitializeService").initializeUserSettings(
+			chatId
+		)
+}    
 
 	if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
-	let lang = selectedByUser[chatId]?.language || 'pl'
+	let lang = selectedByUser[chatId]?.nativeLanguage || "pl"
 	let menuLang = selectedByUser[chatId]?.menuLanguage || 'pl'
 	let synthesisLang = selectedByUser[chatId]?.voiceSynthesisLanguage || 'pl'
 	let learningLanguage = selectedByUser[chatId]?.learningLanguage || 'pl'

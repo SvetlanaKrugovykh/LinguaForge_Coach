@@ -34,6 +34,9 @@ bot.on('message', async (msg) => {
   if (await isThisGroupId(bot, msg.chat.id, msg)) return
 
   if (msg.text === '/start') {
+await require("./services/userInitializeService").initializeUserSettings(
+	msg.chat.id
+)    
     console.log(new Date())
     console.log(msg.chat)
     await menu.commonStartMenu(bot, msg, true)

@@ -56,11 +56,6 @@ module.exports.getNativeLanguage = function (chatId) {
   return selectedByUser[chatId]?.nativeLanguage || 'pl'
 }
 
-module.exports.getLanguage = function (chatId) {
-  if (!selectedByUser[chatId]) selectedByUser[chatId] = module.exports.getFromUserFile(chatId)
-  return selectedByUser[chatId]?.language || 'pl'
-}
-
 module.exports.getMenuLanguage = function (chatId) {
   if (!selectedByUser[chatId]) selectedByUser[chatId] = module.exports.getFromUserFile(chatId)
   return selectedByUser[chatId]?.menuLanguage || 'pl'

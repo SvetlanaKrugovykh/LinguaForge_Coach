@@ -65,7 +65,7 @@ module.exports.callTranslate = async function (bot, msg, direction = 'direct') {
 module.exports.callTranslate_OLD = async function (bot, msg) {
 	try {
 		const text = selectedByUser[msg.chat.id]?.text
-		const direction = `${selectedByUser[msg.chat.id]?.language}_${
+		const direction = `${selectedByUser[msg.chat.id]?.nativeLanguage}_${
 			selectedByUser[msg.chat.id]?.direction
 		}`
 
