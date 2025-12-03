@@ -10,7 +10,8 @@ async function ollamaRequest(promptName, promptParams) {
     URL_LANG_TOOL,
     {
       model: 'qwen2:7b',
-      prompt: promptText
+      prompt: promptText,
+      temperature: 0.5
     },
     { headers: { 'Content-Type': 'application/json' } }
   )

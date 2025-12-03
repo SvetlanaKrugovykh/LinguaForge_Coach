@@ -110,15 +110,15 @@ async function handler(bot, msg) {
 			answer = await menu.translation(bot, msg, data)
 			if (answer && Array.isArray(answer) && answer[0]) {
 				const wordData = {
-					word: answer[0].word || '',
-					wordForms: answer[0].word_forms || '',
-					russian: answer[0].ru || '',
-					ukrainian: answer[0].uk || '',
-					english: answer[0].en || '',
-					partOfSpeech: answer[0].part_of_speech || '',
-					gender: answer[0].gender || '-',
-					language: lang,
-					explain_language: selectedByUser[chatId]?.nativeLanguage,
+					word: answer[0].word || "",
+					wordForms: answer[0].word_forms || "",
+					russian: answer[0].ru || "",
+					ukrainian: answer[0].uk || "",
+					english: answer[0].en || "",
+					partOfSpeech: answer[0].part_of_speech || "",
+					gender: answer[0].gender || "-",
+					language: learningLanguage,
+					explain_language: lang,
 				}
 				await wordsTool.analyzeWord(bot, msg.chat.id, wordData)
 			}
