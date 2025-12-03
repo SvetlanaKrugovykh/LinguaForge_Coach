@@ -243,10 +243,10 @@ if (!selectedByUser[chatId]) {
 			)
 			break
 		case '7_1':
-      await evS.gotoEvaluate(bot, msg, learningLanguage,'4')
+      await evS.gotoEvaluate(bot, msg, learningLanguage,'5')
       break      
 		case '7_2':
-      await evS.gotoEvaluate(bot, msg, learningLanguage,'5')
+      await evS.gotoEvaluate(bot, msg, learningLanguage,'4')
 			break
 		case '5_5':
 			await langS.SendVoiceOutOpus(bot, msg, menuLang)
