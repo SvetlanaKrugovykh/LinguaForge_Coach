@@ -9,9 +9,11 @@ module.exports.check = async function (bot, msg, lang, inputText = null) {
   try {
     let inputLength = 3
     const text = inputText ? inputText.trim() : (await inputLineScene(bot, msg)).trim()
-    const voiceSynthesisLanguage = selectedByUser[msg?.chat?.id]?.voiceSynthesisLanguage || null
+    const learningLanguage = selectedByUser[msg?.chat?.id]?.learningLanguage 
+    const native_language = selectedByUser[msg?.chat?.id]?.nativeLanguage 
+    const gender = selectedByUser[msg?.chat?.id]?.gender || 'female'
 
-    if (!voiceSynthesisLanguage) return
+    if (!learningLanguage) return
 
     if (!text || text.length < inputLength) {
       await bot.sendMessage(msg.chat.id, 'that`s not enough\n', { parse_mode: 'HTML' })
@@ -20,8 +22,9 @@ module.exports.check = async function (bot, msg, lang, inputText = null) {
 
     const response = await ollamaRequest('language', {
       text: text,
-      language: voiceSynthesisLanguage,
-      native_language: lang
+      language: learningLanguage,
+      native_language: native_language || lang,
+      gender: gender
     })
 
     const { sendFirmMessage } = require('../modules/firmMessageSender')
@@ -35,13 +38,14 @@ async function ollamaRequest(promptName, promptParams) {
   const URL_LANG_TOOL = process.env.URL_LANG_TOOL
   const promptText = prompts[promptName](promptParams)
   const response = await axios.post(
-    URL_LANG_TOOL,
-    {
-      model: 'qwen2:7b',
-      prompt: promptText
-    },
-    { headers: { 'Content-Type': 'application/json' } }
-  )
+		URL_LANG_TOOL,
+		{
+			model: "qwen2:7b",
+			prompt: promptText,
+			temperature: 0.5
+		},
+		{ headers: { "Content-Type": "application/json" } }
+	)
   let resultText = ''
   if (typeof response.data === 'string') {
     response.data.split('\n').forEach(line => {

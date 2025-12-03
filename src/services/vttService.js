@@ -27,9 +27,7 @@ module.exports.getVTT = async function (filePath, tgId, lang, msg) {
 		}
 
 		const language =
-			selectedByUser[tgId]?.voiceSynthesisLanguage ||
-			process.env.LANG4VOICE ||
-			"pl"
+			selectedByUser[tgId]?.voiceSynthesisLanguage || process.env.LANG4VOICE || 'pl'
 		const form = new FormData()
 		form.append("file", fs.createReadStream(filePath))
 		form.append("clientId", tgId)
