@@ -11,7 +11,7 @@ async function ollamaRequest(promptName, promptParams) {
     {
       model: 'qwen2:7b',
       prompt: promptText,
-      temperature: 0.5
+      temperature: Number(process.env.LANG_TOOL_TEMPERATURE) || 0.5
     },
     { headers: { 'Content-Type': 'application/json' } }
   )
