@@ -73,13 +73,13 @@ async function handler(bot, msg) {
 
 if (!selectedByUser[chatId]) {
 	selectedByUser[chatId] =
-		await require("../services/userInitializeService").initializeUserSettings(
+		await require('../services/userInitializeService').initializeUserSettings(
 			chatId
 		)
 }    
 
 	if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
-	let lang = selectedByUser[chatId]?.nativeLanguage || "pl"
+	let lang = selectedByUser[chatId]?.nativeLanguage || 'pl'
 	let menuLang = selectedByUser[chatId]?.menuLanguage || 'pl'
 	let synthesisLang = selectedByUser[chatId]?.voiceSynthesisLanguage || 'pl'
 	let learningLanguage = selectedByUser[chatId]?.learningLanguage || 'pl'
@@ -190,19 +190,11 @@ if (!selectedByUser[chatId]) {
 			break
 		case '11_2':
 			selectedByUser[chatId].changed = false
-			await menu.chooseLanguageMenu(
-				bot,
-				msg,
-				'voiceSynthesisLanguage'
-			)
+			await menu.chooseLanguageMenu(bot, msg, 'voiceSynthesisLanguage')
 			break
 		case '22_2':
 			selectedByUser[chatId].changed = false
-			await menu.chooseLanguageMenu(
-				bot,
-				msg,
-				'learningLanguage'
-			)
+			await menu.chooseLanguageMenu(bot, msg, 'learningLanguage')
 			break
 		case '32_2':
 			selectedByUser[chatId].changed = false
@@ -249,6 +241,12 @@ if (!selectedByUser[chatId]) {
 				menuLang,
 				selectedByUser[chatId].OptionsParts4_6
 			)
+			break
+		case '7_1':
+      await evS.gotoEvaluate(bot, msg, learningLanguage,'4')
+      break      
+		case '7_2':
+      await evS.gotoEvaluate(bot, msg, learningLanguage,'5')
 			break
 		case '5_5':
 			await langS.SendVoiceOutOpus(bot, msg, menuLang)

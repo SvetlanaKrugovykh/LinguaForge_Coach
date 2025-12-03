@@ -4,6 +4,19 @@ const fs = require('fs')
 const { selectedByUser } = require('../../src/globalBuffer')
 require('dotenv').config()
 
+function deduplicateSentences(text) {
+	const sentences = text.split(/(?<=[.!?])\s+/)
+	const seen = new Set()
+	return sentences
+		.filter((s) => {
+			const trimmed = s.trim()
+			if (!trimmed) return false
+			if (seen.has(trimmed)) return false
+			seen.add(trimmed)
+			return true
+		})
+		.join(" ")
+}
 
 module.exports.getVTT = async function (filePath, tgId) {
   try {
@@ -28,7 +41,12 @@ module.exports.getVTT = async function (filePath, tgId) {
       }
     })
     fs.unlinkSync(filePath)
-    const translatedText = response?.data?.translated_text || '⚠️❌ [Error: No text returned]'
+    let translatedText = response?.data?.translated_text || '⚠️❌ [Error: No text returned]'
+         if ( response?.data?.translated_text ) {
+            translatedText = deduplicateSentences(response.data.translated_text)
+            await bot.sendMessage(msg.chat.id, translatedText)
+            await check(bot, msg, lang, translatedText)
+          }
     return translatedText
   } catch (error) {
     console.error('Error:', error.message)
