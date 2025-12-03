@@ -11,11 +11,11 @@ module.exports.gotoEvaluate = async function (bot, msg, lang, part = '') {
 
   switch (part) {
     case '4':
-      await langT.check(bot, msg, lang)
+      await check(bot, msg, lang)
       break
     case '5':
-      filePath = await menu.notTextScene(bot, msg, 'pl', false, true)
-      response = await vtt.getVTT(filePath, tgId)
+      filePath = await menu.notTextScene(bot, msg, lang, false, true)
+      response = await vtt.getVTT(filePath, tgId, lang, msg)
       break
     default:
       await menu.commonStartMenu(bot, msg, true)
