@@ -71,12 +71,7 @@ async function handler(bot, msg) {
 	const data = getCallbackData(msg.text)
 	if (!data) return
 
-if (!selectedByUser[chatId]) {
-	selectedByUser[chatId] =
-		await require('../services/userInitializeService').initializeUserSettings(
-			chatId
-		)
-}    
+  if (!selectedByUser[chatId]) 	selectedByUser[chatId] = await require('../services/userInitializeService').initializeUserSettings(chatId)
 
 	if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
 	let lang = selectedByUser[chatId]?.nativeLanguage || 'pl'
