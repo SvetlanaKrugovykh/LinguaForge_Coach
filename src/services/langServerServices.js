@@ -28,15 +28,20 @@ module.exports.getVoiceFromTxt = async function (text, lang, msg, bot, type = 'a
 module.exports.getLangData = async function (text, chatId, bot, lang) {
   try {
     let data = ''
-    const response = await axios.post(`${process.env.SERVER_URL}/co-to-jest`, {
-      "text": text,
-      "userId": chatId,
-      "lang": lang
-    }, {
-      headers: {
-        Authorization: process.env.LG_SERVER_AUTHORIZATION
+    const response = await axios.post(
+      `${process.env.SERVER_URL}/co-to-jest`,
+      {
+        text: text,
+        userId: chatId,
+        lang: lang
+      },
+      {
+        headers: {
+          Authorization: process.env.LG_SERVER_AUTHORIZATION
+        },
+        timeout: 10000 // 10 seconds
       }
-    })
+    )
     selectedByUser[chatId].words = response.data
     if (response.data && response.data.length > 0) {
       data = response.data.map(item => {
