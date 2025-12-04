@@ -3,7 +3,7 @@ const FormData = require('form-data')
 const fs = require('fs')
 const { bot, selectedByUser } = require('../../src/globalBuffer')
 require('dotenv').config()
-const { check } = require("./langTool")
+const { check } = require('./langTool')
 
 function deduplicateSentences(text) {
 	const sentences = text.split(/(?<=[.!?])\s+/)
@@ -16,7 +16,7 @@ function deduplicateSentences(text) {
 			seen.add(trimmed)
 			return true
 		})
-		.join(" ")
+		.join(' ')
 }
 
 module.exports.getVTT = async function (filePath, tgId, lang, msg) {
@@ -29,10 +29,10 @@ module.exports.getVTT = async function (filePath, tgId, lang, msg) {
 		const language =
 			selectedByUser[tgId]?.voiceSynthesisLanguage || process.env.LANG4VOICE || 'pl'
 		const form = new FormData()
-		form.append("file", fs.createReadStream(filePath))
-		form.append("clientId", tgId)
-		form.append("segment_number", "1")
-		form.append("language", language)
+		form.append('file', fs.createReadStream(filePath))
+		form.append('clientId', tgId)
+		form.append('segment_number', '1')
+		form.append('language', language)
 
 		const formHeaders = form.getHeaders()
 
@@ -44,7 +44,7 @@ module.exports.getVTT = async function (filePath, tgId, lang, msg) {
 		})
 		fs.unlinkSync(filePath)
 		let translatedText =
-			response?.data?.translated_text || "⚠️❌ [Error: No text returned]"
+			response?.data?.translated_text || '⚠️❌ [Error: No text returned]'
 		if (response?.data?.translated_text) {
 			translatedText = deduplicateSentences(response.data.translated_text)
 			await bot.sendMessage(msg.chat.id, translatedText)
@@ -52,7 +52,7 @@ module.exports.getVTT = async function (filePath, tgId, lang, msg) {
 		}
 		return translatedText
 	} catch (error) {
-		console.error("Error:", error.message)
+		console.error('Error:', error.message)
 		return null
 	}
 }
