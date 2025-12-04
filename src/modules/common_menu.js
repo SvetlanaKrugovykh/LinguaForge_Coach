@@ -117,128 +117,131 @@ module.exports.notTextScene = async function (
 	toSend = true,
 	voice = false,
 	toChatID = null
-) {
+	) {
 	const GROUP_ID = toChatID || process.env.GROUP_ID
 	try {
-		const chatId = msg.chat.id
-		await bot.sendMessage(chatId, `<i>${texts[lang]['0_2']}\n</i>`, {
-			parse_mode: 'HTML',
-		})
+	const chatId = msg.chat.id
+	await bot.sendMessage(chatId, `<i>${texts[lang]['0_2']}\n</i>`, {
+	parse_mode: 'HTML',
+	})
 
-		const collectedMessages = []
+	const collectedMessages = []
 
-		const handleMessage = async (message) => {
-			if (message.chat.id === chatId) {
-				if (message.text) {
-					collectedMessages.push({ type: 'text', content: message.text })
-				} else if (message.photo) {
-					const fileId = message.photo[message.photo.length - 1].file_id
-					collectedMessages.push({ type: 'photo', fileId })
-				} else if (message.document) {
-					const fileId = message.document.file_id
-					collectedMessages.push({ type: 'document', fileId })
-				} else if (message.audio) {
-					const fileId = message.audio.file_id
-					collectedMessages.push({ type: 'audio', fileId })
-				} else if (message.voice) {
-					const fileId = message.voice.file_id
-					collectedMessages.push({ type: 'voice', fileId })
+	let resolved = false
+
+	const handleMessage = async (message) => {
+		if (message.chat.id === chatId) {
+			if (message.text) {
+				collectedMessages.push({ type: 'text', content: message.text })
+			} else if (message.photo) {
+				const fileId = message.photo[message.photo.length - 1].file_id
+				collectedMessages.push({ type: 'photo', fileId })
+			} else if (message.document) {
+				const fileId = message.document.file_id
+				collectedMessages.push({ type: 'document', fileId })
+			} else if (message.audio) {
+				const fileId = message.audio.file_id
+				collectedMessages.push({ type: 'audio', fileId })
+			} else if (message.voice) {
+				const fileId = message.voice.file_id
+				collectedMessages.push({ type: 'voice', fileId })
+				if (!resolved) {
+					resolved = true
+					bot.removeListener('message', handleMessage)
+					resolvePromise()
 				}
 			}
 		}
+	}
 
-		bot.on('message', handleMessage)
-
-		await new Promise((resolve) => {
-			const timeout = setTimeout(() => {
+	let resolvePromise
+	await new Promise((resolve) => {
+		resolvePromise = resolve
+		const timeout = setTimeout(() => {
+			if (!resolved) {
+				resolved = true
 				bot.removeListener('message', handleMessage)
 				resolve()
-			}, 30000)
-
-			bot.on('message', (message) => {
-				if (message.chat.id === chatId) {
-					clearTimeout(timeout)
-					bot.removeListener('message', handleMessage)
-					resolve()
-				}
-			})
-		})
-
-		for (const message of collectedMessages) {
-			if (!toChatID) {
-				if (!globalBuffer.msgQueue) globalBuffer.msgQueue = {}
-				if (!globalBuffer.msgQueue[msg.chat.id])
-					globalBuffer.msgQueue[msg.chat.id] = []
-			} else {
-				respondToSelectedClient(bot, msg, toChatID)
 			}
+		}, 120000)
+		bot.on('message', handleMessage)
+	})
 
-			if (message.type === 'text') {
-				if (!toChatID) {
-					globalBuffer.msgQueue[msg.chat.id].push({
-						type: 'text',
-						content: message.content,
-					})
-					if (toSend) {
-						await bot.sendMessage(
-							GROUP_ID,
-							`Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):\n${message.content}`,
-							{ parse_mode: 'HTML' }
-						)
-					}
-				} else {
+	for (const message of collectedMessages) {
+		if (!toChatID) {
+			if (!globalBuffer.msgQueue) globalBuffer.msgQueue = {}
+			if (!globalBuffer.msgQueue[msg.chat.id])
+				globalBuffer.msgQueue[msg.chat.id] = []
+		} else {
+			respondToSelectedClient(bot, msg, toChatID)
+		}
+
+		if (message.type === 'text') {
+			if (!toChatID) {
+				globalBuffer.msgQueue[msg.chat.id].push({
+					type: 'text',
+					content: message.content,
+				})
+				if (toSend) {
 					await bot.sendMessage(
 						GROUP_ID,
-						`Reply from admin group:\n${message.content}`,
+						`Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):\n${message.content}`,
 						{ parse_mode: 'HTML' }
 					)
 				}
 			} else {
-				if (toSend) {
-					const header = !toChatID
-						? `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):`
-						: `Reply from admin group:\n`
-					await bot.sendMessage(GROUP_ID, header, { parse_mode: 'HTML' })
-				}
-				if (message.type === 'photo') {
-					if (!toChatID)
-						globalBuffer.msgQueue[msg.chat.id].push({
-							type: 'photo',
-							fileId: message.fileId,
-						})
-					await bot.sendPhoto(GROUP_ID, message.fileId)
-				} else if (message.type === 'document') {
-					if (!toChatID)
-						globalBuffer.msgQueue[msg.chat.id].push({
-							type: 'document',
-							fileId: message.fileId,
-						})
-					await bot.sendDocument(GROUP_ID, message.fileId)
-				} else if (message.type === 'audio') {
-					if (!toChatID)
-						globalBuffer.msgQueue[msg.chat.id].push({
-							type: 'audio',
-							fileId: message.fileId,
-						})
-					await bot.sendAudio(GROUP_ID, message.fileId)
-				} else if (message.type === 'voice') {
-					const dirPath = process.env.TEMP_DOWNLOADS_CATALOG
-					fs.mkdirSync(dirPath, { recursive: true })
-					const filePath = path.join(dirPath, `${message.fileId}.ogg`)
-					await downloadFile(bot, message.fileId, filePath)
-					if (!toChatID)
-						globalBuffer.msgQueue[msg.chat.id].push({ type: 'voice', filePath })
-					return filePath
-				}
+				await bot.sendMessage(
+					GROUP_ID,
+					`Reply from admin group:\n${message.content}`,
+					{ parse_mode: 'HTML' }
+				)
+			}
+		} else {
+			if (toSend) {
+				const header = !toChatID
+					? `Message from ${msg.chat.first_name} ${msg.chat.last_name} (ID: ${msg.chat.id}):`
+					: `Reply from admin group:\n`
+				await bot.sendMessage(GROUP_ID, header, { parse_mode: 'HTML' })
+			}
+			if (message.type === 'photo') {
+				if (!toChatID)
+					globalBuffer.msgQueue[msg.chat.id].push({
+						type: 'photo',
+						fileId: message.fileId,
+					})
+				await bot.sendPhoto(GROUP_ID, message.fileId)
+			} else if (message.type === 'document') {
+				if (!toChatID)
+					globalBuffer.msgQueue[msg.chat.id].push({
+						type: 'document',
+						fileId: message.fileId,
+					})
+				await bot.sendDocument(GROUP_ID, message.fileId)
+			} else if (message.type === 'audio') {
+				if (!toChatID)
+					globalBuffer.msgQueue[msg.chat.id].push({
+						type: 'audio',
+						fileId: message.fileId,
+					})
+				await bot.sendAudio(GROUP_ID, message.fileId)
+			} else if (message.type === 'voice') {
+				const dirPath = process.env.TEMP_DOWNLOADS_CATALOG
+				fs.mkdirSync(dirPath, { recursive: true })
+				const filePath = path.join(dirPath, `${message.fileId}.ogg`)
+				await downloadFile(bot, message.fileId, filePath)
+				if (!toChatID)
+					globalBuffer.msgQueue[msg.chat.id].push({ type: 'voice', filePath })
+				return filePath
 			}
 		}
+	}
 
-		if (toSend && !toChatID) {
-			await bot.sendMessage(chatId, texts[lang]['0_4'], { parse_mode: 'HTML' })
-		}
+	if (toSend && !toChatID) {
+		await bot.sendMessage(chatId, texts[lang]['0_4'], { parse_mode: 'HTML' })
+	}
 	} catch (err) {
-		console.log(err)
-		await bot.sendMessage(msg.chat.id, texts[lang]['0_1'])
+	console.log(err)
+	await bot.sendMessage(msg.chat.id, texts[lang]['0_1'])
 	}
 }
 
