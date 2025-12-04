@@ -296,7 +296,10 @@ async function handler(bot, msg) {
 		case '39_9':
 			pinLanguage(data, msg, 'menuLanguage')
 			break
-		case 'pay_now':
+		case '40_0':
+      // Author gender selection for text correctness check
+      break
+    case 'pay_now':
 			await payNow(bot, msg, menuLang)
 			break
 		case 'download_info':
