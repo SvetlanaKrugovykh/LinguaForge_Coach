@@ -6,6 +6,7 @@ const { textInput } = require('../modules/common_functions')
 const langS = require('../services/langServerServices')
 const { payNow } = require('../controllers/payments')
 const { globalBuffer, selectedByUser } = require('../globalBuffer')
+const userSessions = require('../modules/userSessions')
 const { pinLanguage } = require('../services/userSetterService')
 const { getFromUserFile } = require('../services/userGetterServices')
 const evS = require('../services/evaluationService')
@@ -72,7 +73,8 @@ async function handler(bot, msg) {
 	if (!data) return
 
   if (!selectedByUser[chatId]) 	selectedByUser[chatId] = await require('../services/userInitializeService').initializeUserSettings(chatId)
-
+  userSessions.addChatIdIfNotExists(chatId)
+  
 	if (!globalBuffer[chatId]) globalBuffer[chatId] = {}
 	let lang = selectedByUser[chatId]?.nativeLanguage || 'pl'
 	let menuLang = selectedByUser[chatId]?.menuLanguage || 'pl'
