@@ -39,7 +39,7 @@ module.exports.getLangData = async function (text, chatId, bot, lang) {
         headers: {
           Authorization: process.env.LG_SERVER_AUTHORIZATION
         },
-        timeout: 10000 // 10 seconds
+        timeout: 30000 // 30 seconds
       }
     )
     selectedByUser[chatId].words = response.data
